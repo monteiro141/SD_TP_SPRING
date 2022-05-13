@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-public class Publishers extends User {
+public class Publishers {
     @Id
     private Integer publisher_id;
     private String name;
@@ -22,42 +22,34 @@ public class Publishers extends User {
         this.publisher_id = publisher_id;
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
-    @Override
     public void setName(String name) {
         this.name = name;
     }
 
-    @Override
     public String getEmail() {
         return email;
     }
 
-    @Override
     public void setEmail(String email) {
         this.email = email;
     }
 
-    @Override
     public String getPassword() {
         return password;
     }
 
-    @Override
     public void setPassword(String password) {
         this.password = password;
     }
 
-    @Override
     public String getRole() {
         return role;
     }
 
-    @Override
     public void setRole(String role) {
         this.role = role;
     }
