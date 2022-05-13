@@ -11,7 +11,7 @@ public class Publishers {
     private String email;
     private String password;
     private String role;
-    @OneToMany(mappedBy = "news_publiser_id", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "news_publisher_id", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private Set<News> publisher_news_list;
 
     public Integer getPublisher_id() {
