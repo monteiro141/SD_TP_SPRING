@@ -56,6 +56,7 @@ public class IndexController {
 
     //@GetMapping("/loginUser")
     public String getUserLoginPage() {
+        System.out.println(isAuthenticated());
         switch (isAuthenticated().charAt(1)){
             case 'P':
                 return "redirect:/publisher/";
