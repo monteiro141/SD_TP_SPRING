@@ -41,8 +41,6 @@ public class User {
         this.password = password;
         this.enabled = enabled;
         this.roles = roles;
-        //this.subscriber = subscriber;
-        //this.publisher_user_full = publisher_user_full;
     }
     public User(){}
 

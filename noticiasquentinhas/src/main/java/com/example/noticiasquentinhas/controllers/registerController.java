@@ -56,12 +56,15 @@ public class registerController {
     @GetMapping(path = "/register")
     public String returnToIndex(Model model) throws MalformedURLException {
         UserRegistrationDto userRegistrationDto = new UserRegistrationDto();
+        System.out.println("Entered");
         model.addAttribute("newUser", userRegistrationDto);
         return "auth/register";
     }
 
-    @PostMapping("/registerUser")
+    @PostMapping("/register")
     public String registerUser(@ModelAttribute("newUser") UserRegistrationDto userRegistrationDto){
+        System.out.println("/registerUser");
+        System.out.println(userRegistrationDto.toString());
         registerOnRepository(userRegistrationDto);
         return "redirect:/";
     }

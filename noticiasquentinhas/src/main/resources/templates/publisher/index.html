@@ -54,7 +54,10 @@
                 <li><a href="#" class="nav-link px-2 text-white">Insert new to a given Topic</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">Search all my published news</a></li>
             </ul>
-
+            <div class="text-end" th:object="${loggedInUser}">
+            <input type="text" readonly="readonly" disabled class="btn btn-warning" th:value="${loggedInUser.username}"/>
+            </div>
+            <div class="px-2"></div>
             <div class="text-end">
                 <form th:action="@{/logout}" method="post">
                     <input type="submit" class="btn btn-warning" value="logout"/>
