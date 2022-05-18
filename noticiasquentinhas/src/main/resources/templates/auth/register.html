@@ -23,23 +23,28 @@
 </head>
 
 <body class="text-center">
-<form class="form-signin">
+<form class="form-signin" action="#" th:action="@{/registerUser}" th:object="${newUser}" method="POST">
     <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
     <h1 class="h3 mb-5 font-weight-normal">Insira as credenciais</h1>
-    <input id="name" class="form-control" placeholder="Nome" required autofocus>
+    <input id="name" class="form-control" placeholder="Nome" required autofocus th:field="*{name}">
     <div class="mt-4 col-md-12"></div>
     <label for="inputEmail" class="sr-only"></label>
-    <input type="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
+    <input type="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus th:field="*{email}">
     <div class="mt-4 col-md-12"></div>
     <label for="inputPassword" class="sr-only"></label>
-    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required th:field="*{password}">
     <div class="mt-4 col-md-12"></div>
     <label for="inputPassword" class="sr-only"></label>
     <input type="password" id="inputPasswordConfirmation" class="form-control" placeholder="Confirmar Password" required>
     <div class="mt-4 col-md-12"></div>
     <div class="mt-4 col-md-12"></div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Registar</button>
+    <select class="form-select" aria-label="Default select example" th:field="*{role}">
+        <option value="SUBSCRIBER">Subscriber</option>
+        <option value="PUBLISHER">Publisher</option>
+    </select>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" >Registar</button>
     <p class="mt-4 mb-4 p-3 text-muted">&copy; Copyright Notícias Quentinhas 2021-2022</p>
 </form>
 </body>
+
 </html>

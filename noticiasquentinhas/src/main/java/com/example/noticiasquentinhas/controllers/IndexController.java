@@ -1,19 +1,19 @@
 package com.example.noticiasquentinhas.controllers;
 
-import com.example.noticiasquentinhas.repository.NewsRepository;
-import com.example.noticiasquentinhas.repository.PublisherRepository;
-import com.example.noticiasquentinhas.repository.SubscriberRepository;
-import com.example.noticiasquentinhas.repository.TopicsRepository;
-import org.junit.jupiter.api.Test;
+import com.example.noticiasquentinhas.entities.Publishers;
+import com.example.noticiasquentinhas.entities.Subscribers;
+import com.example.noticiasquentinhas.entities.User;
+import com.example.noticiasquentinhas.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -21,15 +21,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Controller
+
 public class IndexController {
     @Autowired
-    public NewsRepository newsRepository;
+    private NewsRepository newsRepository;
     @Autowired
-    public TopicsRepository topicsRepository;
+    private TopicsRepository topicsRepository;
     @Autowired
-    public PublisherRepository publisherRepository;
+    private PublisherRepository publisherRepository;
     @Autowired
-    public SubscriberRepository subscriberRepository;
+    private SubscriberRepository subscriberRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     TestRestTemplate restTemplate;
     URL base;
@@ -38,45 +41,28 @@ public class IndexController {
     public String returnToIndex(Model model) throws MalformedURLException {
         //restTemplate = new TestRestTemplate("user", "password");
         //base = new URL("http://localhost:" + 8080);
-        return "index";
+        return getUserLoginPage();
     }
 
-    @GetMapping(path = "/publisherHome")
-    public String returnPublisherHome(Model model) throws MalformedURLException {
-        //restTemplate = new TestRestTemplate("user", "password");
-        //base = new URL("http://localhost:" + 8080);
-        return "publisherHome";
+    private String isAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || AnonymousAuthenticationToken.class.
+                isAssignableFrom(authentication.getClass())) {
+            return "  ";
+        }
+
+        return authentication.getAuthorities().toString();
     }
 
-    public NewsRepository getNewsRepository() {
-        return newsRepository;
-    }
-
-    public void setNewsRepository(NewsRepository newsRepository) {
-        this.newsRepository = newsRepository;
-    }
-
-    public TopicsRepository getTopicsRepository() {
-        return topicsRepository;
-    }
-
-    public void setTopicsRepository(TopicsRepository topicsRepository) {
-        this.topicsRepository = topicsRepository;
-    }
-
-    public PublisherRepository getPublisherRepository() {
-        return publisherRepository;
-    }
-
-    public void setPublisherRepository(PublisherRepository publisherRepository) {
-        this.publisherRepository = publisherRepository;
-    }
-
-    public SubscriberRepository getSubscriberRepository() {
-        return subscriberRepository;
-    }
-
-    public void setSubscriberRepository(SubscriberRepository subscriberRepository) {
-        this.subscriberRepository = subscriberRepository;
+    //@GetMapping("/loginUser")
+    public String getUserLoginPage() {
+        switch (isAuthenticated().charAt(1)){
+            case 'P':
+                return "redirect:/publisher/";
+            case 'S':
+                return "redirect:/subscriber/";
+            default:
+                return "index";
+        }
     }
 }
