@@ -23,19 +23,25 @@
 </head>
 
 <body class="text-center">
-<form class="form-signin">
+<div th:if="${param.error}">
+    Invalid username and password.
+</div>
+<div th:if="${param.logout}">
+    You have been logged out.
+</div>
+<form class="form-signin" th:action="@{/login}" method="post">
     <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
     <h1 class="h3 mb-3 font-weight-normal">Insira as credenciais</h1>
     <label for="inputEmail" class="sr-only"></label>
-    <input type="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
+    <input type="text" id="inputEmail" name="username" class="form-control" placeholder="Email" required autofocus>
     <label for="inputPassword" class="sr-only"></label>
-    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+    <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
     <div class="checkbox mb-3">
         <label>
             <input type="checkbox" value="remember-me"> Lembre-me
         </label>
     </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
+    <input class="btn btn-lg btn-primary btn-block" type="submit">Entrar</input>
     <p class="mt-4 mb-4 p-3 text-muted">&copy; Copyright Notícias Quentinhas 2021-2022</p>
 </form>
 </body>
