@@ -59,11 +59,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     protected void configure(AuthenticationManagerBuilder builder) throws Exception {
         builder.authenticationProvider(authenticationProvider());
-        /*builder.jdbcAuthentication().dataSource(dataSource).usersByUsernameQuery("select email, password " +
-                        "from user "+
-                        "where email = ?")
-                .authoritiesByUsernameQuery("select email, role "+
-                        "from user "+
-                        "where email = ?");*/
     }
 }

@@ -39,8 +39,6 @@ public class IndexController {
 
     @GetMapping(path = "/**")
     public String returnToIndex(Model model) throws MalformedURLException {
-        //restTemplate = new TestRestTemplate("user", "password");
-        //base = new URL("http://localhost:" + 8080);
         return getUserLoginPage();
     }
 
