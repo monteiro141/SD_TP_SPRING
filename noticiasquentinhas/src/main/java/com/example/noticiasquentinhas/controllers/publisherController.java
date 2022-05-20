@@ -62,7 +62,6 @@ public class publisherController {
     }
 
 
-
     @GetMapping(path = "/publisher/searchTopic")
     public String returnToPublishersearchTopic(Model model) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
