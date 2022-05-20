@@ -38,18 +38,6 @@ public class registerController {
                 true, userRegistrationDto.getRole());
         System.out.println("User:");
         System.out.println(user);
-
-        if(userRegistrationDto.getRole().equals("SUBSCRIBER")){
-            System.out.println("Created a subscriber");
-            //Subscribers subscriber = new Subscribers();
-            //subscriber.setUser(user);
-            //subscriberRepository.save(subscriber);
-        }else{
-            System.out.println("Created a publisher");
-            //Publishers publisher = new Publishers();
-            //publisher.setUser_publisher_full(user);
-            //publisherRepository.save(publisher);
-        }
         userService.save(userRegistrationDto);
     }
 
@@ -63,8 +51,6 @@ public class registerController {
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("newUser") UserRegistrationDto userRegistrationDto){
-        System.out.println("/registerUser");
-        System.out.println(userRegistrationDto.toString());
         registerOnRepository(userRegistrationDto);
         return "redirect:/";
     }

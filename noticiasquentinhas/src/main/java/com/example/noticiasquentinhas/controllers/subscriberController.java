@@ -1,5 +1,7 @@
 package com.example.noticiasquentinhas.controllers;
 
+import com.example.noticiasquentinhas.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +14,9 @@ import java.net.MalformedURLException;
 @Controller
 public class subscriberController {
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping(path = "/subscriber/")
     public String returnToSubscriberIndex(Model model) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -20,7 +25,9 @@ public class subscriberController {
         System.out.println(authentication.getDetails());
         System.out.println(authentication.getPrincipal().toString());
         System.out.println();
-        model.addAttribute("loggedInUser",((UserDetails) authentication.getPrincipal()));
+        System.out.println(userService.currentUserName(authentication.getName()));
+        System.out.println(userService.currentUserRole(authentication.getName()));
+        model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         return "subscriber/index";
     }
 }

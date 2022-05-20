@@ -6,4 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface  UserService extends UserDetailsService {
     User save(UserRegistrationDto registrationDto);
+    public String currentUserName(String email);
+    public String currentUserRole(String email);
+
 }

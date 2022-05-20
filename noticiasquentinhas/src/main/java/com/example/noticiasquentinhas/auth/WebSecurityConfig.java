@@ -46,14 +46,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                         .antMatchers("/subscriber/**").hasAuthority("SUBSCRIBER")
                         .antMatchers("/publisher/**").hasAuthority("PUBLISHER")
-                        .antMatchers("/","/register","/login").permitAll()
+                        .antMatchers("/register").permitAll()
+                        .antMatchers("/").permitAll()
                 .anyRequest().authenticated()
+
                 .and()
                 .formLogin().loginPage("/login").permitAll()
+
                 .and()
                 .logout().invalidateHttpSession(true)
                 .clearAuthentication(true).logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/").permitAll();
+                .logoutSuccessUrl("/")
+                .and()
+                .rememberMe().userDetailsService(userService);
     }
 
     @Autowired

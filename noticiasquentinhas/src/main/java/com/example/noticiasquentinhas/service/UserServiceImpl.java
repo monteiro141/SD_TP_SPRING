@@ -46,6 +46,24 @@ public class UserServiceImpl implements UserService {
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), mapRolesToAuthorities(user.getRole()));
     }
 
+    @Override
+    public String currentUserName(String email) {
+        User user = userRepository.findByEmail(email);
+        if(user == null) {
+            throw new UsernameNotFoundException("Invalid username or password.");
+        }
+        return user.getName();
+    }
+
+    @Override
+    public String currentUserRole(String email){
+        User user = userRepository.findByEmail(email);
+        if(user == null) {
+            throw new UsernameNotFoundException("Invalid username or password.");
+        }
+        return user.getRole();
+    }
+
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(String role){
         return Collections.singleton(new SimpleGrantedAuthority(role));
     }
