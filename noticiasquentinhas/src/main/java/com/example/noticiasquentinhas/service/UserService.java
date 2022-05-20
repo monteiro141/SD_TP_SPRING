@@ -8,5 +8,5 @@ public interface  UserService extends UserDetailsService {
     User save(UserRegistrationDto registrationDto);
     public String currentUserName(String email);
     public String currentUserRole(String email);
-
+    public User search(String email);
 }

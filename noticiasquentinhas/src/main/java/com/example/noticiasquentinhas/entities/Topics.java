@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class Topics {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -13,8 +14,9 @@ public class Topics {
     @OneToMany(mappedBy = "news_topic_id", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private Set<News> topic_news_list;
 
-    @ManyToMany
-    private Set<Subscribers> topics_subscribers_list;
+    @ManyToOne
+    @JoinColumn(name="topicList", nullable = false)
+    private User subscriber;
 
     public Topics(){
 
@@ -42,5 +44,13 @@ public class Topics {
 
     public void setTopic_news_list(Set<News> topic_news_list) {
         this.topic_news_list = topic_news_list;
+    }
+
+    public User getSubscriber() {
+        return subscriber;
+    }
+
+    public void setSubscriber(User subscriber) {
+        this.subscriber = subscriber;
     }
 }
