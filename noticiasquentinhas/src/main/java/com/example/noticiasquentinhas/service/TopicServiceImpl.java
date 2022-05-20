@@ -31,8 +31,8 @@ public class TopicServiceImpl implements TopicService{
     }
 
     @Override
-    public Collection<Topics> topicsList() {
-        return topicsRepository.findAllTopics();
+    public Iterable<Topics> topicsList() {
+        return topicsRepository.findAll();
     }
 
 

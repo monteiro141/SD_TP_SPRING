@@ -5,9 +5,10 @@ import java.util.Set;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+@SequenceGenerator(name="topic_id_gen", initialValue = 1,allocationSize = 200)
 public class Topics {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "topic_id_gen")
     private Integer Topics;
     private String name;
 
@@ -38,13 +39,7 @@ public class Topics {
         this.name = name;
     }
 
-    public Set<News> getNews_topics() {
-        return news_topics;
-    }
 
-    public void setNews_topics(Set<News> news_topics) {
-        this.news_topics = news_topics;
-    }
 
     public User getSubscriber() {
         return subscriber;

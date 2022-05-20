@@ -67,6 +67,7 @@ public class publisherController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","searchTopic");
+        model.addAttribute("listTopics", (topicService.topicsList()));
         return "publisher/index";
     }
 

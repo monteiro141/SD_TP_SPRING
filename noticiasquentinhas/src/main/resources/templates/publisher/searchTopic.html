@@ -1,7 +1,16 @@
 <div th:fragment="searchTopic_frag">
     <table class="table">
-        <thead class="table-header">
-        
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Titulo</th>
+        </tr>
         </thead>
+        <tbody>
+        <tr th:each="topic : ${listTopics}">
+            <th scope="row" th:text="${topic.Topics}"></th>
+            <td th:text="${topic.name}"></td>
+        </tr>
+        </tbody>
     </table>
 </div>

@@ -7,6 +7,6 @@ import java.util.Collection;
 
 public interface TopicService {
     public Topics search(String name);
-    public Collection<Topics> topicsList();
+    public Iterable<Topics> topicsList();
     public Topics save(TopicForm topicForm);
 }
