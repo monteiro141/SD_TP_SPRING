@@ -6,7 +6,7 @@ import com.example.noticiasquentinhas.entities.Topics;
 import java.util.Collection;
 
 public interface TopicService {
-    Topics search(String name);
-    Collection<Topics> topicsList();
-    Topics save(TopicForm topicForm);
+    public Topics search(String name);
+    public Collection<Topics> topicsList();
+    public Topics save(TopicForm topicForm);
 }

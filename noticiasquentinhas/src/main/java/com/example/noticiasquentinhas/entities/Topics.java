@@ -11,11 +11,11 @@ public class Topics {
     private Integer Topics;
     private String name;
 
-    @OneToMany(mappedBy = "news_topic_id", orphanRemoval = true, cascade = CascadeType.PERSIST)
-    private Set<News> topic_news_list;
+    @OneToMany(mappedBy = "topics_news", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    private Set<News> news_topics;
 
     @ManyToOne
-    @JoinColumn(name="topicList", nullable = false)
+    @JoinColumn(name="topics_subscriber", nullable = true)
     private User subscriber;
 
     public Topics(){
@@ -38,12 +38,12 @@ public class Topics {
         this.name = name;
     }
 
-    public Set<News> getTopic_news_list() {
-        return topic_news_list;
+    public Set<News> getNews_topics() {
+        return news_topics;
     }
 
-    public void setTopic_news_list(Set<News> topic_news_list) {
-        this.topic_news_list = topic_news_list;
+    public void setNews_topics(Set<News> news_topics) {
+        this.news_topics = news_topics;
     }
 
     public User getSubscriber() {

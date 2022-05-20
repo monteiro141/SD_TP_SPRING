@@ -26,7 +26,7 @@ public class NewsServiceImpl implements NewsService{
     public News save(NewsForm newsForm, User user, Topics topics) {
         News news = new News(newsForm.getTitle(),newsForm.getContent(), newsForm.getCreationDate());
         news.setPublisher(user);
-        news.setNews_topic_id(topics);
+        news.setTopics_news(topics);
         return newsRepository.save(news);
     }
 

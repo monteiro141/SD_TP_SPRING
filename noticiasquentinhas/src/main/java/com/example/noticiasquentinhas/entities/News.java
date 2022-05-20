@@ -13,12 +13,12 @@ public class News {
     private String creationDate;
 
     @ManyToOne
-    @JoinColumn(name="topic_news_list", nullable = false)
-    private Topics news_topic_id;
+    @JoinColumn(name="news_topics", nullable = false)
+    private Topics topics_news;
 
 
     @ManyToOne
-    @JoinColumn(name="newsList", nullable = true)
+    @JoinColumn(name="news_publisher", nullable = false)
     private User publisher;
 
     public News(){
@@ -55,12 +55,12 @@ public class News {
         this.content = content;
     }
 
-    public Topics getNews_topic_id() {
-        return news_topic_id;
+    public Topics getTopics_news() {
+        return topics_news;
     }
 
-    public void setNews_topic_id(Topics news_topic_id) {
-        this.news_topic_id = news_topic_id;
+    public void setTopics_news(Topics topics_news) {
+        this.topics_news = topics_news;
     }
 
     public String getCreationDate() {

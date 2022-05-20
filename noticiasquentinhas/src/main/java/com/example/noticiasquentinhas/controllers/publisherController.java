@@ -54,7 +54,9 @@ public class publisherController {
     }
 
     @PostMapping(path = "/publisher/addTopic")
-    public String creatingANews(@ModelAttribute("topicForm") TopicForm topicForm){
+    public String creatingANews(@ModelAttribute("addTopic") TopicForm topicForm){
+        System.out.println("Topic:");
+        System.out.println(topicForm.getName());
         topicService.save(topicForm);
         return "redirect:/";
     }
