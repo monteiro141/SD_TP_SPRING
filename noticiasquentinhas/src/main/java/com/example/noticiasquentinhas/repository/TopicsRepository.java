@@ -10,7 +10,5 @@ import java.util.Set;
 
 public interface TopicsRepository extends CrudRepository<Topics, Integer> {
     public Topics findByName(String name);
-    @Query("SELECT name FROM Topics")
-    public Collection<Topics> findAllTopics();
     public Topics save(TopicForm topicForm);
 }
