@@ -37,7 +37,7 @@ public class IndexController {
     TestRestTemplate restTemplate;
     URL base;
 
-    @GetMapping(path = "/**")
+    @GetMapping(path = "/")
     public String returnToIndex(Model model) throws MalformedURLException {
         return getUserLoginPage();
     }

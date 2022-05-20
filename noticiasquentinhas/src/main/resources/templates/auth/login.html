@@ -31,7 +31,7 @@
     <div th:if="${param.logout}">
         You have been logged out.
     </div>
-    <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+    <img class="mb-4" th:src="@{/images/userIcon.svg}" alt="" width="72" height="72">
     <h1 class="h3 mb-3 font-weight-normal">Insira as credenciais</h1>
     <label for="inputEmail" class="sr-only"></label>
     <input type="text" id="inputEmail" name="username" class="form-control" placeholder="Email" required autofocus>
@@ -42,7 +42,7 @@
             <input type="checkbox" id="remember" name="remember-me"> Lembre-me
         </label>
     </div>
-    <input class="btn btn-lg btn-primary btn-block" type="submit">Entrar</input>
+    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Entrar"></input>
     <p class="mt-4 mb-4 p-3 text-muted">&copy; Copyright Notícias Quentinhas 2021-2022</p>
 </form>
 </body>
