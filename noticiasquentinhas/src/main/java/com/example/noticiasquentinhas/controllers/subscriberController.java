@@ -20,14 +20,40 @@ public class subscriberController {
     @GetMapping(path = "/subscriber/")
     public String returnToSubscriberIndex(Model model) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("Authentication");
-        System.out.println(authentication.getName());
-        System.out.println(authentication.getDetails());
-        System.out.println(authentication.getPrincipal().toString());
-        System.out.println();
-        System.out.println(userService.currentUserName(authentication.getName()));
-        System.out.println(userService.currentUserRole(authentication.getName()));
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
+        model.addAttribute("linkPath","home");
+        return "subscriber/index";
+    }
+
+    @GetMapping("/subscriber/topic")
+    public String returnToSubscriberTopic(Model model) throws MalformedURLException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
+        model.addAttribute("linkPath","topic");
+        return "subscriber/index";
+    }
+
+    @GetMapping("/subscriber/news")
+    public String returnToSubscriberNews(Model model) throws MalformedURLException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
+        model.addAttribute("linkPath","news");
+        return "subscriber/index";
+    }
+
+    @GetMapping("/subscriber/lastNews")
+    public String returnToSubscriberLastNews(Model model) throws MalformedURLException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
+        model.addAttribute("linkPath","lastNews");
+        return "subscriber/index";
+    }
+
+    @GetMapping("/subscriber/removeTopic")
+    public String returnToSubscriberRemoveTopic(Model model) throws MalformedURLException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
+        model.addAttribute("linkPath","removeTopic");
         return "subscriber/index";
     }
 }

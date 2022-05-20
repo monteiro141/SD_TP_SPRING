@@ -1,0 +1,27 @@
+<div th:fragment="navbar">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+            </a>
+
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a th:href="@{/publisher/}"class="nav-link px-2 text-secondary">Home</a></li>
+                <li><a th:href="@{/publisher/addTopic}"class="nav-link px-2 text-white">Add Topic</a></li>
+                <li><a th:href="@{/publisher/searchTopic}"class="nav-link px-2 text-white">Search available Topics</a></li>
+                <li><a th:href="@{/publisher/createNews}"class="nav-link px-2 text-white">Insert new to a given Topic</a></li>
+                <li><a th:href="@{/publisher/listNews}"class="nav-link px-2 text-white">Search all my published news</a></li>
+            </ul>
+            <div class="text-end" th:object="${loggedInUser}">
+                <input type="text" readonly="readonly" disabled class="btn btn-warning" th:value="${loggedInUser}"/>
+            </div>
+            <div class="px-2"></div>
+            <div class="text-end">
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" class="btn btn-warning" value="logout"/>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
