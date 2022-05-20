@@ -1,6 +1,7 @@
 package com.example.noticiasquentinhas.entities;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 public class News {
@@ -9,18 +10,27 @@ public class News {
     private Integer news_id;
     private String title;
     private String content;
+    private String creationDate;
 
     @ManyToOne
-    @JoinColumn(name="topic_news_list", nullable = false)
-    private Topics news_topic_id;
+    @JoinColumn(name="news_topics", nullable = false)
+    private Topics topics_news;
+
 
     @ManyToOne
-    @JoinColumn(name="publisher_news_list", nullable = false)
-    private Publishers news_publisher_id;
+    @JoinColumn(name="news_publisher", nullable = false)
+    private User publisher;
 
     public News(){
 
     }
+
+    public News(String title, String content, String creationDate) {
+        this.title = title;
+        this.content = content;
+        this.creationDate = creationDate;
+    }
+
     public Integer getNews_id() {
         return news_id;
     }
@@ -45,19 +55,27 @@ public class News {
         this.content = content;
     }
 
-    public Topics getNews_topic_id() {
-        return news_topic_id;
+    public Topics getTopics_news() {
+        return topics_news;
     }
 
-    public void setNews_topic_id(Topics news_topic_id) {
-        this.news_topic_id = news_topic_id;
+    public void setTopics_news(Topics topics_news) {
+        this.topics_news = topics_news;
     }
 
-    public Publishers getNews_user_id() {
-        return news_publisher_id;
+    public String getCreationDate() {
+        return creationDate;
     }
 
-    public void setNews_user_id(Publishers news_publisher_id) {
-        this.news_publisher_id = news_publisher_id;
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public User getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(User publisher) {
+        this.publisher = publisher;
     }
 }

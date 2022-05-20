@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -34,6 +35,12 @@ public class UserServiceImpl implements UserService {
                 true,registrationDto.getRole());
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public User search(String email){
+        User user = userRepository.findByEmail(email);
+        return user;
     }
 
     @Override

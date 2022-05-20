@@ -4,17 +4,20 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+@SequenceGenerator(name="topic_id_gen", initialValue = 1,allocationSize = 200)
 public class Topics {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "topic_id_gen")
     private Integer Topics;
     private String name;
 
-    @OneToMany(mappedBy = "news_topic_id", orphanRemoval = true, cascade = CascadeType.PERSIST)
-    private Set<News> topic_news_list;
+    @OneToMany(mappedBy = "topics_news", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    private Set<News> news_topics;
 
-    @ManyToMany
-    private Set<Subscribers> topics_subscribers_list;
+    @ManyToOne
+    @JoinColumn(name="topics_subscriber", nullable = true)
+    private User subscriber;
 
     public Topics(){
 
@@ -36,11 +39,13 @@ public class Topics {
         this.name = name;
     }
 
-    public Set<News> getTopic_news_list() {
-        return topic_news_list;
+
+
+    public User getSubscriber() {
+        return subscriber;
     }
 
-    public void setTopic_news_list(Set<News> topic_news_list) {
-        this.topic_news_list = topic_news_list;
+    public void setSubscriber(User subscriber) {
+        this.subscriber = subscriber;
     }
 }

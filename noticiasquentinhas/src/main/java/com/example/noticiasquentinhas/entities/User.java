@@ -16,17 +16,13 @@ public class User {
     private String email;
     private String password;
     private boolean enabled;
-
-    /*@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(
-                    name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "role_id", referencedColumnName = "id"))
-                    */
-
     private String role;
+
+    @OneToMany(mappedBy = "publisher", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    private Set<News> news_publisher;
+
+    @OneToMany(mappedBy = "subscriber", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    private Set<Topics> topics_subscriber;
 
     public String getRole() {
         return role;
@@ -110,6 +106,22 @@ public class User {
         this.enabled = enabled;
     }
 
+
+    public Set<News> getNews_publisher() {
+        return news_publisher;
+    }
+
+    public void setNews_publisher(Set<News> news_publisher) {
+        this.news_publisher = news_publisher;
+    }
+
+    public Set<Topics> getTopics_subscriber() {
+        return topics_subscriber;
+    }
+
+    public void setTopics_subscriber(Set<Topics> topics_subscriber) {
+        this.topics_subscriber = topics_subscriber;
+    }
 
     @Override
     public String toString() {
