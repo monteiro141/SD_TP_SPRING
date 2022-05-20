@@ -4,7 +4,10 @@
         <h1 class="h3 mb-5 font-weight-normal">Crie uma noticia</h1>
         <input id="title" class="form-control" placeholder="Titulo" required autofocus th:field="*{title}">
         <div class="mt-4 col-md-12"></div>
-        <input id="content" class="form-control" placeholder="Conteúdo" required autofocus th:field="*{content}">
+        <div class="form-group" >
+            <label for="content">Corpo da notícia</label>
+            <textarea class="form-control" id="content" placeholder="Conteúdo"  rows="7"  maxlength="180" th:field="*{content}"></textarea>
+        </div>
         <div class="mt-4 col-md-12"></div>
         <select class="form-select" aria-label="Default select example" th:each="topic : ${topicsList}">
             <option th:text="${topic.name}" th:field="*{topic}"></option>
