@@ -1,9 +1,6 @@
 package com.example.noticiasquentinhas.controllers;
 
 import com.example.noticiasquentinhas.entities.*;
-import com.example.noticiasquentinhas.repository.PublisherRepository;
-import com.example.noticiasquentinhas.repository.SubscriberRepository;
-import com.example.noticiasquentinhas.repository.UserRepository;
 import com.example.noticiasquentinhas.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,16 +11,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.net.MalformedURLException;
-import java.util.Arrays;
 
 @Controller
 public class registerController {
 
     private UserService userService;
-    @Autowired
-    private PublisherRepository publisherRepository;
-    @Autowired
-    private SubscriberRepository subscriberRepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -44,7 +36,6 @@ public class registerController {
     @GetMapping(path = "/register")
     public String returnToIndex(Model model) throws MalformedURLException {
         UserRegistrationDto userRegistrationDto = new UserRegistrationDto();
-        System.out.println("Entered");
         model.addAttribute("newUser", userRegistrationDto);
         return "auth/register";
     }
