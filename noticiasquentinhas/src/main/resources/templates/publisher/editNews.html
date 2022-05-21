@@ -1,6 +1,14 @@
 <div th:fragment="editNews_frag">
-    <form class="form-signin" th:action="@{/publisher/editNews}" th:object="${theNew}" method="POST">
-        <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+    <div class="p-4 p-md-4 mb-4 text-white rounded bg-dark">
+        <div class="col-md-14 px-63">
+            <h1 class="display-2 fst-italic">Notícias Quentinhas</h1>
+        </div>
+    </div>
+    <form class="form-signin" th:action="@{/publisher/editNewsButton}" th:object="${theNew}" method="POST">
+        <div th:if="${edit} == 'fail'" class="alert alert-danger center-div text-center">
+            Falha ao editar a notícia!
+        </div>
+        <div class="mt-4 col-md-12"></div>
         <h1 class="h3 mb-5 font-weight-normal">Editar noticia</h1>
         <input id="title" class="form-control" placeholder="Titulo" maxlength="100" required autofocus th:field="*{title}">
         <div class="mt-4 col-md-12"></div>
@@ -9,11 +17,12 @@
             <textarea class="form-control" id="content" placeholder="Conteúdo"  rows="7"  maxlength="180" th:field="*{content}"></textarea>
         </div>
         <div class="mt-4 col-md-12"></div>
-        <input class="btn btn-lg btn-primary btn-block" type="submit" value="Alterar">
+        <div class="text-center">
+            <input class="btn btn-lg btn-primary btn-block" type="submit" value="Alterar">
+        </div>
         <input type="hidden" th:field="*{news_id}">
         <input type="hidden" th:field="*{creationDate}">
         <input type="hidden" th:field="*{topics_news}">
         <input type="hidden" th:field="*{publisher}">
-        <p class="mt-4 mb-4 p-3 text-muted">&copy; Copyright Notícias Quentinhas 2021-2022</p>
     </form>
 </div>

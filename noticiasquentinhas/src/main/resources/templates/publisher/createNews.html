@@ -1,6 +1,19 @@
 <div th:fragment="createNews_frag">
-    <form class="form-signin" th:action="@{/publisher/createNews}" th:object="${newsForm}" method="POST">
-        <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+    <div class="p-4 p-md-4 mb-4 text-white rounded bg-dark">
+        <div class="col-md-14 px-63">
+            <h1 class="display-2 fst-italic">Notícias Quentinhas</h1>
+        </div>
+    </div>
+    <form class="form-signin" th:action="@{/publisher/createNewsButton}" th:object="${newsForm}" method="POST">
+
+        <div th:if="${create} == 'fail'" class="alert alert-danger center-div text-center">
+            Notícia já existe!
+        </div>
+
+        <div th:if="${create} == 'success'" class="alert alert-success center-div text-center">
+            Notícia criado com sucesso!
+        </div>
+        <div class="mt-4 col-md-12"></div>
         <h1 class="h3 mb-5 font-weight-normal">Crie uma noticia</h1>
         <input id="title" class="form-control" placeholder="Titulo" maxlength="100" required autofocus th:field="*{title}">
         <div class="mt-4 col-md-12"></div>
@@ -12,7 +25,10 @@
         <select class="form-select" aria-label="Default select example" th:field="*{topic}" >
             <option th:each="topicss : ${topicsList}" th:text="${topicss.name}" th:value="${topicss.name}"></option>
         </select>
-        <button class="btn btn-lg btn-primary btn-block" type="submit" >Criar</button>
-        <p class="mt-4 mb-4 p-3 text-muted">&copy; Copyright Notícias Quentinhas 2021-2022</p>
+        <div class="mt-4 col-md-12"></div>
+        <div class="text-center">
+            <button class="btn btn-lg btn-primary btn-block " type="submit" >Criar</button>
+
+        </div>
     </form>
 </div>

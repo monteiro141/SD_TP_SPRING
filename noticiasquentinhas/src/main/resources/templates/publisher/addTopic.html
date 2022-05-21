@@ -1,10 +1,37 @@
 <div th:fragment="addTopic_frag" class="align-items-center">
-    <form class="form-signin text-center" th:action="@{/publisher/addTopic}" th:object="${addTopic}" method="POST">
+    <div class="p-4 p-md-4 mb-4 text-white rounded bg-dark">
+        <div class="col-md-14 px-63">
+            <h1 class="display-2 fst-italic">Notícias Quentinhas</h1>
+        </div>
+    </div>
+
+    <form class="form-signin text-center" th:action="@{/publisher/addTopicButton}" th:object="${addTopic}" method="POST">
+        <div th:if="${create} == 'fail'" class="alert alert-danger center-div text-center">
+            Tópico já existe!
+        </div>
+
+        <div th:if="${create} == 'success'" class="alert alert-success center-div text-center">
+            Tópico criado com sucesso!
+        </div>
+        <div class="mt-4 col-md-12"></div>
+
+        <!--<div th:switch="${create}">
+            <p th:case="'fail'">
+                <div class="warning">
+                    Tópico já existe!
+                </div>
+            </p>
+            <p th:case="'success'">
+                <div class="success">
+                Tópico criado com sucesso!
+                </div>
+            </p>
+            <p th:case="*"></p>
+        </div>-->
         <h1 class="h3 mt-10 font-weight-normal">Adicione um tópico</h1>
         <div class="mt-4 col-md-12"></div>
         <input id="title" class="form-control center-div" placeholder="Tópico" required autofocus th:field="*{name}">
         <div class="mt-4 col-md-12"></div>
         <button class="btn btn-lg btn-primary btn-block align-items-center" type="submit" >Criar</button>
-        <p class="mt-4 mb-4 p-3 text-muted">&copy; Copyright Notícias Quentinhas 2021-2022</p>
     </form>
 </div>

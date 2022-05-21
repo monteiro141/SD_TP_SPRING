@@ -25,12 +25,10 @@
 <body class="text-center">
 
 <form class="form-signin" th:action="@{/login}" method="POST">
-    <div th:if="${param.error}">
-        Invalid username and password.
-    </div>
-    <div th:if="${param.logout}">
+
+    <!--<div th:if="${param.logout}">
         You have been logged out.
-    </div>
+    </div>-->
     <img class="mb-4" th:src="@{/images/userIcon.svg}" alt="" width="72" height="72">
     <h1 class="h3 mb-3 font-weight-normal">Insira as credenciais</h1>
     <label for="inputEmail" class="sr-only"></label>
@@ -42,8 +40,11 @@
             <input type="checkbox" id="remember" name="remember-me"> Lembre-me
         </label>
     </div>
-    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Entrar"></input>
+    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Entrar">
     <a th:href="@{/}" type="button" class="btn btn-lg btn-primary btn-block">Voltar</a>
+    <div th:if="${param.error}">
+        Invalid username and password.
+    </div>
 
     <p class="mt-4 mb-4 p-3 text-muted">&copy; Copyright Notícias Quentinhas 2021-2022</p>
 </form>
