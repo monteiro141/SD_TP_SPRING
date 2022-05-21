@@ -53,7 +53,7 @@ public class publisherController {
     private ArrayList<News> lastTenNews(Iterable<News> currentList){
         ArrayList<News> finalList = new ArrayList<>();
         currentList.forEach((news -> {
-            if(finalList.size() <= 10)
+            if(finalList.size() < 10)
                 finalList.add(news);
             else{
                 finalList.remove(0);
