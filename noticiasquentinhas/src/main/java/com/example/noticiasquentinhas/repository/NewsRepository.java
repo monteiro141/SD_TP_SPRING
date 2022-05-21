@@ -7,4 +7,5 @@ import java.util.Set;
 
 public interface NewsRepository extends CrudRepository<News, Integer> {
     Iterable<News> findAllByPublisher_Email(String email);
+    Iterable<News> findAll();
 }

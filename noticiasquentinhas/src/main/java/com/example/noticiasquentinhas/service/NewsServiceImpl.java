@@ -39,4 +39,9 @@ public class NewsServiceImpl implements NewsService{
     public Set<News> listNewsTopic(Timestamp timeStart, Timestamp timeEnd, String topic) {
         return null;
     }
+
+    @Override
+    public Iterable<News> listAllNews(){
+        return newsRepository.findAll();
+    }
 }

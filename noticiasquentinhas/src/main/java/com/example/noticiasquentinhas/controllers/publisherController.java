@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Set;
 
 @Controller
@@ -43,7 +45,22 @@ public class publisherController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","home");
+        ArrayList<News> newsList = lastTenNews(newsService.listAllNews());
+        model.addAttribute("newsList",newsList);
         return "publisher/index";
+    }
+
+    private ArrayList<News> lastTenNews(Iterable<News> currentList){
+        ArrayList<News> finalList = new ArrayList<>();
+        currentList.forEach((news -> {
+            if(finalList.size() <= 10)
+                finalList.add(news);
+            else{
+                finalList.remove(0);
+                finalList.add(news);
+            }
+        }));
+        return finalList;
     }
 
     @GetMapping(path = "/publisher/addTopic")

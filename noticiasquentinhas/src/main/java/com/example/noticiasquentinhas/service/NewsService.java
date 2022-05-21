@@ -14,4 +14,5 @@ public interface NewsService {
     public News save(NewsForm newsForm, User user, Topics topics);
     public Iterable<News> listNewsUser(String email);
     public Set<News> listNewsTopic(Timestamp timeStart,Timestamp timeEnd,String topic);
+    public Iterable<News> listAllNews();
 }
