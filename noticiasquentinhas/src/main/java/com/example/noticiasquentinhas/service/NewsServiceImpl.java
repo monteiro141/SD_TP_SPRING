@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -43,5 +46,15 @@ public class NewsServiceImpl implements NewsService{
     @Override
     public Iterable<News> listAllNews(){
         return newsRepository.findAll();
+    }
+
+    @Override
+    public Optional<News> findNew(Integer id){
+        return newsRepository.findById(id);
+    }
+
+    @Override
+    public News saveEditNew(News news){
+        return newsRepository.save(news);
     }
 }

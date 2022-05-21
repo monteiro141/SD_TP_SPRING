@@ -7,6 +7,7 @@
                         <h3 class="mb-0 text-break" th:text="${newIteration.title}"></h3>
                         <div class="mb-1 text-muted text-break"th:text="${newIteration.creationDate}" ></div>
                         <p class="mb-auto" th:text="${newIteration.content}"></p>
+                        <a th:href="@{/publisher/editNews/{id}(id=${newIteration.news_id})}"> Edit the new </a>
                     </div>
                 </div>
             </div>

@@ -4,6 +4,7 @@ import com.example.noticiasquentinhas.entities.News;
 import com.example.noticiasquentinhas.entities.NewsForm;
 import com.example.noticiasquentinhas.entities.TopicForm;
 import com.example.noticiasquentinhas.entities.User;
+import com.example.noticiasquentinhas.repository.NewsRepository;
 import com.example.noticiasquentinhas.service.NewsService;
 import com.example.noticiasquentinhas.service.TopicService;
 import com.example.noticiasquentinhas.service.UserService;
@@ -15,12 +16,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
+
+import java.util.Optional;
 
 @Controller
 public class publisherController {
@@ -50,7 +54,7 @@ public class publisherController {
         return "publisher/index";
     }
 
-    private ArrayList<News> lastTenNews(Iterable<News> currentList){
+    public static ArrayList<News> lastTenNews(Iterable<News> currentList){
         ArrayList<News> finalList = new ArrayList<>();
         currentList.forEach((news -> {
             if(finalList.size() <= 10)
@@ -79,7 +83,6 @@ public class publisherController {
         topicService.save(topicForm);
         return "redirect:/";
     }
-
 
     @GetMapping(path = "/publisher/searchTopic")
     public String returnToPublishersearchTopic(Model model) throws MalformedURLException {
@@ -112,7 +115,6 @@ public class publisherController {
         return "redirect:/";
     }
 
-
     @GetMapping(path = "/publisher/listNews")
     public String returnToPublisherListNews(Model model) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -123,7 +125,24 @@ public class publisherController {
         return "publisher/index";
     }
 
+    @GetMapping(path = "/publisher/editNews/{id}")
+    public String returnToPublisherEditNews(@PathVariable(value="id") Integer id,Model model) throws MalformedURLException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
+        model.addAttribute("linkPath","editNews");
 
+        Optional<News> optional = newsService.findNew(id);
+        News newsEdit = null;
+        if(optional.isPresent()){
+            newsEdit = optional.get();
+        }
+        model.addAttribute("theNew",newsEdit);
+        return "publisher/index";
+    }
 
-
+    @PostMapping("/publisher/editNews")
+    public String saveNew(@ModelAttribute("theNew") News news){
+        newsService.saveEditNew(news);
+        return "redirect:/";
+    }
 }
