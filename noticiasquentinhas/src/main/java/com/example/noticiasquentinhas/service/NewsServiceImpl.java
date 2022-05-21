@@ -31,8 +31,8 @@ public class NewsServiceImpl implements NewsService{
     }
 
     @Override
-    public Set<News> listNewsUser(String email) {
-        return null;
+    public Iterable<News> listNewsUser(String email) {
+        return newsRepository.findAllByPublisher_Email(email);
     }
 
     @Override

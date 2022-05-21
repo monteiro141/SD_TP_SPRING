@@ -1,3 +1,14 @@
 <div th:fragment="listNews_frag">
-    LIST NEWS TODO
+        <div class="row mb-2 text-break">
+            <div class="col-md-6" th:each="newIteration : ${newsList}">
+                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative" >
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <strong class="d-inline-block mb-2 text-success"  th:text="${newIteration.topics_news.name}"></strong>
+                        <h3 class="mb-0 text-break" th:text="${newIteration.title}"></h3>
+                        <div class="mb-1 text-muted text-break"th:text="${newIteration.content}" ></div>
+                        <p class="mb-auto" th:text="${newIteration.creationDate}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
 </div>

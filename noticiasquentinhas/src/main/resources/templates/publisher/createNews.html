@@ -2,15 +2,15 @@
     <form class="form-signin" th:action="@{/publisher/createNews}" th:object="${newsForm}" method="POST">
         <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
         <h1 class="h3 mb-5 font-weight-normal">Crie uma noticia</h1>
-        <input id="title" class="form-control" placeholder="Titulo" required autofocus th:field="*{title}">
+        <input id="title" class="form-control" placeholder="Titulo" maxlength="100" required autofocus th:field="*{title}">
         <div class="mt-4 col-md-12"></div>
         <div class="form-group" >
             <label for="content">Corpo da notícia</label>
             <textarea class="form-control" id="content" placeholder="Conteúdo"  rows="7"  maxlength="180" th:field="*{content}"></textarea>
         </div>
         <div class="mt-4 col-md-12"></div>
-        <select class="form-select" aria-label="Default select example" th:each="topic : ${topicsList}">
-            <option th:text="${topic.name}" th:field="*{topic}"></option>
+        <select class="form-select" aria-label="Default select example" th:field="*{topic}" >
+            <option th:each="topicss : ${topicsList}" th:text="${topicss.name}" th:value="${topicss.name}"></option>
         </select>
         <button class="btn btn-lg btn-primary btn-block" type="submit" >Criar</button>
         <p class="mt-4 mb-4 p-3 text-muted">&copy; Copyright Notícias Quentinhas 2021-2022</p>

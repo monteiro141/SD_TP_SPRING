@@ -4,9 +4,10 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "title"))
 public class News {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer news_id;
     private String title;
     private String content;
@@ -78,4 +79,5 @@ public class News {
     public void setPublisher(User publisher) {
         this.publisher = publisher;
     }
+
 }

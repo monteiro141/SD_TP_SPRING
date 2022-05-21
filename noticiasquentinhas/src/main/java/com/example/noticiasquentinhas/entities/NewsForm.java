@@ -17,6 +17,7 @@ public class NewsForm {
     private String topic;
 
     public NewsForm() {
+        this.creationDate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now());
     }
 
     public NewsForm(String timeStart, String timeEnd, String topic) {
@@ -78,5 +79,17 @@ public class NewsForm {
 
     public void setTimeEnd(String timeEnd) {
         this.timeEnd = timeEnd;
+    }
+
+    @Override
+    public String toString() {
+        return "NewsForm{" +
+                "title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", timeStart='" + timeStart + '\'' +
+                ", timeEnd='" + timeEnd + '\'' +
+                ", creationDate='" + creationDate + '\'' +
+                ", topic='" + topic + '\'' +
+                '}';
     }
 }

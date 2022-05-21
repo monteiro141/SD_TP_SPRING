@@ -1,5 +1,6 @@
 package com.example.noticiasquentinhas.controllers;
 
+import com.example.noticiasquentinhas.entities.News;
 import com.example.noticiasquentinhas.entities.NewsForm;
 import com.example.noticiasquentinhas.entities.TopicForm;
 import com.example.noticiasquentinhas.entities.User;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.net.MalformedURLException;
+import java.util.Set;
 
 @Controller
 public class publisherController {
@@ -84,9 +86,12 @@ public class publisherController {
     @PostMapping("/publisher/createNews")
     public String creatingANews(@ModelAttribute("newsForm") NewsForm newsForm){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("Newsform");
+        System.out.println(newsForm);
         newsService.save(newsForm,
-                userService.search(userService.currentUserName(authentication.getName())),
+                userService.search(authentication.getName()),
                 topicService.search(newsForm.getTopic()));
+
         return "redirect:/";
     }
 
@@ -96,6 +101,8 @@ public class publisherController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","listNews");
+        Iterable<News> newsList = newsService.listNewsUser(authentication.getName());
+        model.addAttribute("newsList",newsList);
         return "publisher/index";
     }
 

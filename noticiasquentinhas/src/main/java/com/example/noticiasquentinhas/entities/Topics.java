@@ -5,10 +5,11 @@ import java.util.Set;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "name"))
-@SequenceGenerator(name="topic_id_gen", initialValue = 1)
+//@SequenceGenerator(name="topic_id_gen", initialValue = 1, allocationSize = 100)
 public class Topics {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "topic_id_gen")
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "topic_id_gen")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer Topics;
     private String name;
 
@@ -48,4 +49,5 @@ public class Topics {
     public void setSubscriber(User subscriber) {
         this.subscriber = subscriber;
     }
+
 }

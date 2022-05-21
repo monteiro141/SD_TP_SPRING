@@ -12,6 +12,6 @@ import java.util.Set;
 
 public interface NewsService {
     public News save(NewsForm newsForm, User user, Topics topics);
-    public Set<News> listNewsUser(String email);
+    public Iterable<News> listNewsUser(String email);
     public Set<News> listNewsTopic(Timestamp timeStart,Timestamp timeEnd,String topic);
 }
