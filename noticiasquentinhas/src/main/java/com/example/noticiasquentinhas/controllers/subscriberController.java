@@ -64,6 +64,7 @@ public class subscriberController {
         ArrayList<Topics> topicsList = topicService.getUnsubscribedTopics(userService.search(authentication.getName()));
         model.addAttribute("topicslist", topicsList);
         model.addAttribute("checkedTopics", new TopicFormSubscriber());
+        model.addAttribute("topicsSize", topicsList.size());
         System.out.println(topicsList.toString());
         return "subscriber/index";
     }
@@ -86,6 +87,10 @@ public class subscriberController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","news");
+        ArrayList<Topics> topicsList = topicService.topicsList();
+        model.addAttribute("topicsList", topicsList);
+        model.addAttribute("topicsSize", topicsList.size());
+        model.addAttribute("topicToSearch", new TopicForm());
         return "subscriber/index";
     }
 
@@ -94,6 +99,7 @@ public class subscriberController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","lastNews");
+
         return "subscriber/index";
     }
 
@@ -105,6 +111,7 @@ public class subscriberController {
         ArrayList<Topics> subscribedTopics = topicService.getSubscribedTopics(userService.search(authentication.getName()));
         model.addAttribute("subscribedTopics", subscribedTopics);
         model.addAttribute("removeTopic", new TopicForm());
+        model.addAttribute("topicsSize", subscribedTopics.size());
         return "subscriber/index";
     }
 

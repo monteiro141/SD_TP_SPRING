@@ -89,6 +89,7 @@ public class publisherController {
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","searchTopic");
         model.addAttribute("listTopics", (topicService.topicsList()));
+        model.addAttribute("topicsSize", topicService.topicsList().size());
         return "publisher/index";
     }
 
@@ -100,6 +101,7 @@ public class publisherController {
         model.addAttribute("newsForm", new NewsForm());
         model.addAttribute("topicsList",topicService.topicsList());
         model.addAttribute("create",name);
+        model.addAttribute("topicsSize", topicService.topicsList().size());
         return "publisher/index";
     }
 

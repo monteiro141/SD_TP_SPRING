@@ -4,18 +4,23 @@
             <h1 class="display-2 fst-italic">Notícias Quentinhas</h1>
         </div>
     </div>
-    <table class="table">
-        <thead class="thead-dark">
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Titulo</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="topic, status: ${listTopics}">
-            <th scope="row" th:text="${status.count}"></th>
-            <td th:text="${topic.name}"></td>
-        </tr>
-        </tbody>
-    </table>
+    <div th:if="${topicsSize} == 0" class="alert alert-danger center-div text-center">
+        Não existem tópicos!
+    </div>
+    <div th:if="${topicsSize} != 0" >
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Titulo</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="topic, status: ${listTopics}">
+                <th scope="row" th:text="${status.count}"></th>
+                <td th:text="${topic.name}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

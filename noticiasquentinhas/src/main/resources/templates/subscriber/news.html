@@ -7,34 +7,56 @@
         </div>
     </div>
 
-    <div class="col-md-4 align-items-center">
-        <select class="form-select input-md" aria-label="Default select example" >
-            <option value="" selected disabled>Tópico</option>
-            <option value="Teste"></option>
-        </select>
-        <div class="mt-2 col-md-12"></div>
 
-    </div>
     <!---ver site https://www.javatpoint.com/spring-mvc-form-drop-down-list--->
     <div>
         <div class="mt-2 col-md-12"></div>
+        <div th:if="${topicsSize} == 0" class="alert alert-danger center-div text-center">
+            Não existem tópicos!
+        </div>
+        <div th:if="${topicsSize} != 0" >
+            <form class="form-signin" th:action="@{/subscriber/news}" th:object="${topicToSearch}" method="POST">
+                <select class="form-select" aria-label="Default select example" th:field="*{name}">
+                    <option value="" selected disabled>Tópico</option>
+                    <option th:each="topicss : ${topicsList}" th:text="${topicss.name}" th:value="${topicss.name}"></option>
+                </select>
+                <div class="mt-2 col-md-12"></div>
+                <label for="firstDate">Starting Date: </label>
+                <input id="firstDate" type="Date"/>
 
-        <label for="firstDate">Starting Date: </label>
-        <input id="firstDate" type="Date"/>
-        <label for="appt-time">Starting Time: </label>
-        <input id="appt-time" type="time" name="appt-time" step="2">
+                <label for="appt-time">Starting Time: </label>
+                <input id="appt-time" type="time" name="appt-time" step="2">
 
-        <div class="mt-2 col-md-12"></div>
+                <div class="mt-2 col-md-12"></div>
 
-        <label for="secondDate">Ending Date: </label>
-        <input id="secondDate" type="Date"/>
-        <label for="secondTime">Ending Time: </label>
-        <input id="secondTime" type="time" name="appt-time" step="2">
+                <label for="secondDate">Ending Date: </label>
+                <input id="secondDate" type="Date"/>
+                <label for="secondTime">Ending Time: </label>
+                <input id="secondTime" type="time" name="appt-time" step="2">
+                <div class="mt-2 col-md-12"></div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit" >Pesquisar</button>
+                
+            </form>
+            <script type="text/javascript">
+                $(function () {
+                    $('#datetimepicker6').datetimepicker();
+                    $('#datetimepicker7').datetimepicker({
+                        useCurrent: false //Important! See issue #1075
+                    });
+                    $("#datetimepicker6").on("dp.change", function (e) {
+                        $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+                    });
+                    $("#datetimepicker7").on("dp.change", function (e) {
+                        $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+                    });
+                });
+            </script>
+
+        </div>
+
     </div>
 
-    <div class="mt-2 col-md-12"></div>
 
-    <button class="btn btn-lg btn-primary btn-block" type="submit" >Pesquisar</button>
 
 
     <div class="mt-2 col-md-12"></div>
