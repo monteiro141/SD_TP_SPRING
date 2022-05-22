@@ -21,7 +21,7 @@ public class User {
     @OneToMany(mappedBy = "publisher", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private Set<News> news_publisher;
 
-    @OneToMany(mappedBy = "subscriber", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "subscribers", cascade = CascadeType.PERSIST)
     private Set<Topics> topics_subscriber;
 
     public String getRole() {
@@ -39,6 +39,7 @@ public class User {
         this.enabled = enabled;
         this.role = role;
     }
+
     public User(){}
 
     /*OneToOne(mappedBy = "user")

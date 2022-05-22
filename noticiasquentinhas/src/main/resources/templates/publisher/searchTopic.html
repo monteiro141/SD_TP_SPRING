@@ -12,8 +12,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="topic : ${listTopics}">
-            <th scope="row" th:text="${topic.Topics}"></th>
+        <tr th:each="topic, status: ${listTopics}">
+            <th scope="row" th:text="${status.count}"></th>
             <td th:text="${topic.name}"></td>
         </tr>
         </tbody>

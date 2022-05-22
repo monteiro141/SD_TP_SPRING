@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
 
@@ -34,7 +35,7 @@ public class NewsServiceImpl implements NewsService{
     }
 
     @Override
-    public Iterable<News> listNewsUser(String email) {
+    public ArrayList<News> listNewsUser(String email) {
         return newsRepository.findAllByPublisher_Email(email);
     }
 
@@ -44,7 +45,7 @@ public class NewsServiceImpl implements NewsService{
     }
 
     @Override
-    public Iterable<News> listAllNews(){
+    public ArrayList<News> listAllNews(){
         return newsRepository.findAll();
     }
 

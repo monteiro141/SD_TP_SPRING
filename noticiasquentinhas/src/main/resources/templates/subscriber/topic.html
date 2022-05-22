@@ -9,21 +9,15 @@
 
     <div class="center-div">
         <h1 class="h3 mt-10 font-weight-normal">Escolhe um tópico</h1>
-        <form  action="submit" method="post" modelAttribute="home">
+        <form th:object="${checkedTopics}" th:action="@{/subscriber/topic}" method="POST" modelAttribute="home">
             <!--https://www.geeksforgeeks.org/spring-mvc-form-checkbox/--->
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckDisabled">
-                <label class="form-check-label" for="flexCheckDisabled">Teste1
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1">
-                <label class="form-check-label" for="flexCheckDefault1">Teste2</label>
+            <div th:each="topic : ${topicslist}" class="form-check">
+                <input class="form-check-input" type="checkbox" th:field="*{name}" th:value="${topic.name}" th:text="${topic.name}" id="flex">
             </div>
             <div class="mt-2 col-md-12"></div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit" >Remover</button>
-
+            <button class="btn btn-lg btn-primary btn-block" type="submit" >Subscrever</button>
         </form>
+
     </div>
 
     </div>

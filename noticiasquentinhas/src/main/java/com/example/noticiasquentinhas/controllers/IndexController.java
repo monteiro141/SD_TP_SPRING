@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -49,6 +50,7 @@ public class IndexController {
                 return "redirect:/subscriber/";
             default:
                 ArrayList<News> newsList = publisherController.lastTenNews(newsService.listAllNews());
+                Collections.reverse(newsList);
                 model.addAttribute("newsList",newsList);
                 return "index";
         }

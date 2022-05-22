@@ -1,6 +1,9 @@
 package com.example.noticiasquentinhas.controllers;
 
 import com.example.noticiasquentinhas.entities.News;
+import com.example.noticiasquentinhas.entities.TopicForm;
+import com.example.noticiasquentinhas.entities.TopicFormSubscriber;
+import com.example.noticiasquentinhas.entities.Topics;
 import com.example.noticiasquentinhas.service.NewsService;
 import com.example.noticiasquentinhas.service.TopicService;
 import com.example.noticiasquentinhas.service.UserService;
@@ -11,9 +14,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 @Controller
 public class subscriberController {
@@ -21,11 +29,16 @@ public class subscriberController {
     @Autowired
     private UserService userService;
 
+    @Autowired
     private NewsService newsService;
+
+    @Autowired
+    private TopicService topicService;
 
     public subscriberController(UserService userService, NewsService newsService, TopicService topicService) {
         this.userService = userService;
         this.newsService = newsService;
+        this.topicService=topicService;
     }
 
 
@@ -36,6 +49,7 @@ public class subscriberController {
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","home");
         ArrayList<News> newsList = publisherController.lastTenNews(newsService.listAllNews());
+        Collections.reverse(newsList);
         model.addAttribute("newsList",newsList);
         return "subscriber/index";
     }
@@ -47,7 +61,24 @@ public class subscriberController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","topic");
+        ArrayList<Topics> topicsList = topicService.getUnsubscribedTopics(userService.search(authentication.getName()));
+        model.addAttribute("topicslist", topicsList);
+        model.addAttribute("checkedTopics", new TopicFormSubscriber());
+        System.out.println(topicsList.toString());
         return "subscriber/index";
+    }
+
+    @PostMapping("/subscriber/topic")
+    public String getSubscribedTopicsForm(@ModelAttribute("checkedTopics") TopicFormSubscriber topicFormSubscriber) throws MalformedURLException {
+        System.out.println(Arrays.toString(topicFormSubscriber.getName()));
+        System.out.println(topicService.getTopicsByName(topicFormSubscriber));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        for (Topics t: topicService.getTopicsByName(topicFormSubscriber)) {
+            t.addSubscriber(userService.search(authentication.getName()));
+            topicService.save(t);
+        }
+
+        return "redirect:/";
     }
 
     @GetMapping("/subscriber/news")
@@ -71,6 +102,22 @@ public class subscriberController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","removeTopic");
+        ArrayList<Topics> subscribedTopics = topicService.getSubscribedTopics(userService.search(authentication.getName()));
+        model.addAttribute("subscribedTopics", subscribedTopics);
+        model.addAttribute("removeTopic", new TopicForm());
         return "subscriber/index";
     }
+
+    @PostMapping("/subscriber/removeTopic")
+    public String getSubscribedTopicsForm(@ModelAttribute("removeTopic") TopicForm topicForm) throws MalformedURLException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Topics topicToUnsubscribe = topicService.search(topicForm.getName());
+        topicToUnsubscribe.removeSubscriber(userService.search(authentication.getName()));
+        topicService.save(topicToUnsubscribe);
+
+        return "redirect:/";
+    }
+
+
+
 }

@@ -10,26 +10,34 @@ public class Topics {
     @Id
     //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "topic_id_gen")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Topics;
+    private Integer topic_id;
     private String name;
 
     @OneToMany(mappedBy = "topics_news", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private Set<News> news_topics;
 
-    @ManyToOne
+    @ManyToMany
     @JoinColumn(name="topics_subscriber", nullable = true)
-    private User subscriber;
+    private Set<User> subscribers;
 
     public Topics(){
 
     }
 
-    public Integer getTopics() {
-        return Topics;
+    public void addSubscriber(User user){
+        subscribers.add(user);
     }
 
-    public void setTopics(Integer topics) {
-        Topics = topics;
+    public void removeSubscriber(User user){
+        subscribers.remove(user);
+    }
+
+    public Integer getTopic_id() {
+        return topic_id;
+    }
+
+    public void setTopic_id(Integer topic_id) {
+        this.topic_id = topic_id;
     }
 
     public String getName() {
@@ -40,14 +48,19 @@ public class Topics {
         this.name = name;
     }
 
-
-
-    public User getSubscriber() {
-        return subscriber;
+    public Set<News> getNews_topics() {
+        return news_topics;
     }
 
-    public void setSubscriber(User subscriber) {
-        this.subscriber = subscriber;
+    public void setNews_topics(Set<News> news_topics) {
+        this.news_topics = news_topics;
     }
 
+    public Set<User> getSubscribers() {
+        return subscribers;
+    }
+
+    public void setSubscribers(Set<User> subscribers) {
+        this.subscribers = subscribers;
+    }
 }

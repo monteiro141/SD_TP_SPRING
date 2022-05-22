@@ -18,21 +18,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Set;
-
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class publisherController {
 
+    @Autowired
     private UserService userService;
 
-
+    @Autowired
     private NewsService newsService;
 
-
+    @Autowired
     private TopicService topicService;
 
 
@@ -48,6 +45,7 @@ public class publisherController {
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","home");
         ArrayList<News> newsList = lastTenNews(newsService.listAllNews());
+        Collections.reverse(newsList);
         model.addAttribute("newsList",newsList);
         return "publisher/index";
     }
@@ -123,7 +121,8 @@ public class publisherController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","listNews");
-        Iterable<News> newsList = newsService.listNewsUser(authentication.getName());
+        ArrayList<News> newsList = newsService.listNewsUser(authentication.getName());
+        Collections.reverse(newsList);
         model.addAttribute("newsList",newsList);
         return "publisher/index";
     }

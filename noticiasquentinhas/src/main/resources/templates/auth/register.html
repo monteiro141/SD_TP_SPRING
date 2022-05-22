@@ -22,6 +22,11 @@
 
 <body class="text-center">
 <form class="form-signin" th:action="@{/register}" th:object="${newUser}" method="POST">
+
+    <div th:if="${createUser} == 'fail'" class="alert alert-danger center-div text-center">
+        Falha ao registar!
+    </div>
+
     <img class="mb-4" th:src="@{/images/userIcon.svg}" alt="" width="72" height="72">
     <h1 class="h3 mb-2 font-weight-normal">Insira as credenciais</h1>
     <input id="name" class="form-control" placeholder="Nome" required autofocus th:field="*{name}">

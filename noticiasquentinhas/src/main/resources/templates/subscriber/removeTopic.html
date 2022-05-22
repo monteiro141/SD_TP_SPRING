@@ -7,12 +7,14 @@
     </div>
     </div>
     <div class="col-md-4 align-items-center text-center center-div">
-        <h1 class="h3 mt-10 font-weight-normal">Escolhe um tópico</h1>
-        <select class="form-select input-md" aria-label="Default select example" >
-            <option value="Teste"></option>
-        </select>
-        <div class="mt-2 col-md-12"></div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit" >Remover</button>
+        <form class="form-signin" th:action="@{/subscriber/removeTopic}" th:object="${removeTopic}" method="POST">
+            <h1 class="h3 mt-10 font-weight-normal">Escolhe um tópico</h1>
+            <select class="form-select" aria-label="Default select example" th:field="*{name}" >
+                <option th:each="topicss : ${subscribedTopics}" th:text="${topicss.name}" th:value="${topicss.name}"></option>
+            </select>
+            <div class="mt-2 col-md-12"></div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" >Remover</button>
+        </form>
     </div>
 
 
