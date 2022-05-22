@@ -27,7 +27,7 @@
                 <textarea class="form-control" id="content" placeholder="Conteúdo"  rows="7"  maxlength="180" th:field="*{content}"></textarea>
             </div>
             <div class="mt-4 col-md-12"></div>
-            <select class="form-select" aria-label="Default select example" th:field="*{name}" >
+            <select class="form-select" aria-label="Default select example" th:field="*{topic}" >
                 <option th:each="topicss : ${topicsList}" th:text="${topicss.name}" th:value="${topicss.name}"></option>
             </select>
             <div class="mt-4 col-md-12"></div>
