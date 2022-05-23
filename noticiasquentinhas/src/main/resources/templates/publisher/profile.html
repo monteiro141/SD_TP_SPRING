@@ -1,0 +1,96 @@
+<div th:fragment="profile_frag">
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#fileImage').change(function () {
+                showImageThumbnail(this);
+            });
+        });
+        function hasWhiteSpace(s) {
+            const whitespaceChars = [' ', '\t', '\n'];
+            return whitespaceChars.some(char => s.includes(char));
+        }
+        function showImageThumbnail(fileInput) {
+
+            if(fileInput.files[0].size >= 1048576){
+                alert("Ficheiro muito grande!");
+                fileInput.value = "";
+            }else if(hasWhiteSpace(fileInput.files[0].name)){
+                alert("Ficheiro com espaços no nome!");
+                fileInput.value = "";
+            }
+
+            else {
+                file = fileInput.files[0];
+                reader = new FileReader();
+
+                reader.onload = function (e){
+                    $('#profilePreview').attr('src',e.target.result);
+                };
+
+                reader.readAsDataURL(file);
+            };
+
+        }
+    </script>
+    <form class="form-horizontal" role="form" method="post" th:action="@{/publisher/saveProfile}" th:object="${userData}" enctype="multipart/form-data">
+    <div class="container bootstrap snippets bootdey">
+        <h1 class="text-primary">Edit Profile</h1>
+        <hr>
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-3">
+                <div class="text-center">
+
+                    <img th:src="@{${fileImagePath}}"  class="profilePreview avatar img-circle img-thumbnail"  id="profilePreview" alt="avatar">
+                    <h6>Upload a different photo...</h6>
+                    <input type="file" class="fileImage" id="fileImage" name="fileImage" accept="image/png, image/jpeg">
+
+                </div>
+            </div>
+
+            <!-- edit form column -->
+            <div class="col-md-9 personal-info">
+                <div class="alert alert-info alert-dismissable">
+                    <a class="panel-close close" data-dismiss="alert">×</a>
+                    <i class="fa fa-coffee"></i>
+                    This is an <strong>.alert</strong>. Use this to show important messages to the user.
+                </div>
+                <h3>Personal info</h3>
+
+
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">First name:</label>
+                        <div class="col-lg-8">
+                            <input class="form-control" type="text" th:value="${firstName}" th:field="*{firstName}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Last name:</label>
+                        <div class="col-lg-8">
+                            <input class="form-control" type="text" th:value="${lastName}" th:field="*{lastName}" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Password:</label>
+                        <div class="col-lg-8">
+                            <input class="form-control" type="password" th:value="${password}" th:field="*{password}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Email:</label>
+                        <div class="col-lg-8">
+                            <input class="form-control"  readonly=readonly type="email" th:value="${email}" th:field="*{email}">
+                        </div>
+                    </div>
+                <input class="form-control"  readonly=readonly type="hidden" th:value="${role}" th:field="*{role}">
+                    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Alterar">
+
+            </div>
+        </div>
+
+    </div>
+    </form>
+    <hr>
+</div>

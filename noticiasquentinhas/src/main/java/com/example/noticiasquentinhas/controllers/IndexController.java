@@ -41,7 +41,6 @@ public class IndexController {
         return authentication.getAuthorities().toString();
     }
 
-    //@GetMapping("/loginUser")
     public String getUserLoginPage(Model model) {
         switch (isAuthenticated().charAt(1)){
             case 'P':

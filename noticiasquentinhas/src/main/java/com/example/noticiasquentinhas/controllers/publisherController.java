@@ -1,23 +1,30 @@
 package com.example.noticiasquentinhas.controllers;
 
-import com.example.noticiasquentinhas.entities.News;
-import com.example.noticiasquentinhas.entities.NewsForm;
-import com.example.noticiasquentinhas.entities.TopicForm;
-import com.example.noticiasquentinhas.entities.User;
+import com.example.noticiasquentinhas.entities.*;
 import com.example.noticiasquentinhas.repository.NewsRepository;
 import com.example.noticiasquentinhas.service.NewsService;
 import com.example.noticiasquentinhas.service.TopicService;
 import com.example.noticiasquentinhas.service.UserService;
+import org.mockito.internal.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 @Controller
@@ -154,4 +161,59 @@ public class publisherController {
         }
         return "redirect:/";
     }
+
+
+    @GetMapping(path = "/publisher/profile")
+    public String returnToPublisherAddTopic(Model model) throws MalformedURLException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
+        model.addAttribute("linkPath","profile");
+        UserRegistrationDto userRegistrationDto = new UserRegistrationDto(userService.search(authentication.getName()));
+
+        model.addAttribute("userData",userRegistrationDto);
+        model.addAttribute("fileImagePath",userRegistrationDto.getProfilePicPath());
+        return "publisher/index";
+    }
+
+    @PostMapping("/publisher/saveProfile")
+    public String saveNew(@ModelAttribute("userData") UserRegistrationDto userRegistrationDto,
+                          @ModelAttribute("fileImagePath") String fileImagePath,
+                          @RequestParam(value = "fileImage") MultipartFile multipartFile){
+        System.out.println(userRegistrationDto);
+        User fetchedUser = userService.search(userRegistrationDto.getEmail());
+        User savedUser;
+        System.out.println(multipartFile.getOriginalFilename());
+        System.out.println(fileImagePath);
+        if(multipartFile.getOriginalFilename() != null && !multipartFile.getOriginalFilename().equals("")){
+            String fileName= StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+            System.out.println(fileName);
+            fetchedUser.setProfilePic(fileName);
+            String uploadDir= "profile-pics/"+ fetchedUser.getId();
+            Path uploadPath = Paths.get(uploadDir);
+            if(!Files.exists(uploadPath)){
+                try {
+                    Files.createDirectories(uploadPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            try(InputStream inputStream = multipartFile.getInputStream()) {
+                Path filepath = uploadPath.resolve(fileName);
+                Files.copy(inputStream, filepath,StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if(userRegistrationDto.getPassword() != null && !userRegistrationDto.getPassword().equals("")){
+            savedUser = userService.save(fetchedUser,userRegistrationDto.getPassword());
+        }else{
+            savedUser = userService.save(fetchedUser);
+        }
+
+        System.out.println(savedUser);
+
+
+        return "redirect:/";
+    }
+
 }

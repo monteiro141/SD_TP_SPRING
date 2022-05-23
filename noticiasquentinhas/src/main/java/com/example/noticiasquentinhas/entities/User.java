@@ -12,11 +12,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String name;
+    private String firstName;
+    private String lastName;
     private String email;
     private String password;
     private boolean enabled;
     private String role;
+    private String profilePic;
 
     @OneToMany(mappedBy = "publisher", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private Set<News> news_publisher;
@@ -32,38 +34,18 @@ public class User {
         this.role = role;
     }
 
-    public User(String name, String email, String password, boolean enabled, String role) {
-        this.name = name;
+    public User(String name, String lastName,String email, String password, boolean enabled, String role) {
+        this.firstName = name;
+        this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.enabled = enabled;
         this.role = role;
+        this.profilePic = null;
     }
 
     public User(){}
 
-    /*OneToOne(mappedBy = "user")
-    @PrimaryKeyJoinColumn
-    private Subscribers subscriber;
-
-    @OneToOne(mappedBy = "user_publisher_full")
-    public Publishers publisher_user_full;
-
-    public Subscribers getSubscriber() {
-        return subscriber;
-    }
-
-    public void setSubscriber(Subscribers subscriber) {
-        this.subscriber = subscriber;
-    }
-
-    public Publishers getPublisher_user_full() {
-        return publisher_user_full;
-    }
-
-    public void setPublisher_user_full(Publishers publisher_user_full) {
-        this.publisher_user_full = publisher_user_full;
-    }*/
 
     public Integer getId() {
         return id;
@@ -73,12 +55,20 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -97,7 +87,20 @@ public class User {
         this.password = password;
     }
 
+    public String getProfilePic() {
+        return profilePic;
+    }
 
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
+
+    @Transient
+    public String getProfilePicPath(){
+        if(profilePic == null || id == null)
+            return "/profile-pics/0/defaultPic.png";
+        return "/profile-pics/" + id + "/" + profilePic;
+    }
 
     public boolean isEnabled() {
         return enabled;
@@ -127,12 +130,16 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "user_id=" + id +
-                ", name='" + name + '\'' +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", enabled=" + enabled +
-                ", role=" + role +
+                ", role='" + role + '\'' +
+                ", profilePic='" + profilePic + '\'' +
+                ", news_publisher=" + news_publisher +
+                ", topics_subscriber=" + topics_subscriber +
                 '}';
     }
 }

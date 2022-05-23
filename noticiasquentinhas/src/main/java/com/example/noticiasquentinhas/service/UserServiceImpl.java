@@ -35,17 +35,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(UserRegistrationDto registrationDto) {
-        User user = new User(registrationDto.getName(),registrationDto.getEmail(),passwordEncoder.encode(registrationDto.getPassword()),
+        User user = new User(registrationDto.getFirstName(),registrationDto.getLastName(),registrationDto.getEmail(),passwordEncoder.encode(registrationDto.getPassword()),
                 true,registrationDto.getRole());
 
         return userRepository.save(user);
     }
 
     @Override
+    public User save(User user){
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User save(User user, String password){
+        user.setPassword(passwordEncoder.encode(password));
+        return userRepository.save(user);
+    }
+
+    @Override
     public User search(String email){
-        System.out.println("Find by");
-        System.out.println(email);
-        System.out.println(userRepository.findUsersByEmail(email));
         return userRepository.findByEmail(email);
     }
 
@@ -65,7 +73,7 @@ public class UserServiceImpl implements UserService {
         if(user == null) {
             throw new UsernameNotFoundException("Invalid username or password.");
         }
-        return user.getName();
+        return user.getFirstName();
     }
 
     @Override
