@@ -179,7 +179,6 @@ public class publisherController {
     public String saveNew(@ModelAttribute("userData") UserRegistrationDto userRegistrationDto,
                           @ModelAttribute("fileImagePath") String fileImagePath,
                           @RequestParam(value = "fileImage") MultipartFile multipartFile){
-        System.out.println(userRegistrationDto);
         User fetchedUser = userService.search(userRegistrationDto.getEmail());
         User savedUser;
         System.out.println(multipartFile.getOriginalFilename());
