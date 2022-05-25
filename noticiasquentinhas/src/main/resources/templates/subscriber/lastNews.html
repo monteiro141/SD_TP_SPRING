@@ -6,37 +6,48 @@
         <!-- <p class="lead mb-0"><a href="#" class="text-white fw-bold">Continue reading...</a></p> -->
     </div>
 </div>
-    <div class="col-md-4 align-items-center">
-        <select class="form-select input-md" aria-label="Default select example" >
-            <option value="" selected disabled>Tópico</option>
-            <option value="Teste"></option>
-        </select>
-        <div class="mt-2 col-md-12"></div>
+    <div class="col-md-12 align-middle">
+        <form class="form-signin" th:action="@{/subscriber/lastNews}" th:object="${topicForm}" method="POST">
+            <select class="form-select" aria-label="Default select example" required th:field="*{name}">
+                <option value="" selected disabled>Tópico</option>
+                <option th:each="topicss : ${topicsList}" th:text="${topicss.name}"  th:value="${topicss.name}"></option>
+            </select>
+            <div class="mt-2 col-md-12"></div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" >Pesquisar</button>
 
-        <button class="btn btn-lg btn-primary btn-block" type="submit" >Pesquisar</button>
-
+        </form>
     </div>
     <!---ver site https://www.javatpoint.com/spring-mvc-form-drop-down-list--->
     
     <div class="mt-2 col-md-12"></div>
-    <div class="row mb-2">
-        <div class="col-md-6">
-            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                <div class="col p-4 d-flex flex-column position-static">
-                    <strong class="d-inline-block mb-2 text-primary">World</strong>
-                    <h3 class="mb-0">Featured post</h3>
-                    <div class="mb-1 text-muted">Nov 12</div>
-                    <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="stretched-link">Continue reading</a>
-                </div>
-                <div class="col-auto d-none d-lg-block">
-                    <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+    <td th:switch="${validation}">
+        <span th:case="'true'">
+            <div class="row mb-2 text-break">
+                <div class="col-md-6">
+                    <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative" >
+                        <div class="col p-4 d-flex flex-column position-static">
+                            <strong class="d-inline-block mb-2 text-success"  th:text="${lastNew.topics_news.name}"></strong>
+                            <h3 class="mb-0 text-break" th:text="${lastNew.title}"></h3>
+                            <div class="mb-1 text-muted text-break"th:text="${lastNew.creationDate}" ></div>
+                            <div class="mb-1 text-muted text-break" th:text="${lastNew.publisher.firstName}+' '+${lastNew.publisher.lastName}"></div>
+                            <p class="mb-auto" th:text="${lastNew.content}"></p>
+                        </div>
+                        <div class="col-auto d-none d-lg-block">
+                            <img th:src="@{${lastNew.newsThumbnailPath}}" class="bd-placeholder-img" width="200" height="250" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em"></text></img>
 
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-
-    </div>
+        </span>
+        <span th:case="'false'">
+            <div class="alert alert-danger center-div text-center">
+                Não há notícias desse tópico!
+            </div>
+        </span>
+        <span th:case="*">
+        </span>
+    </td>
 
 
 </div>

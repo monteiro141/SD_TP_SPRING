@@ -31,8 +31,7 @@ public class NewsForm {
     public NewsForm(String title, String content) {
         this.title = title;
         this.content = content;
-        this.creationDate = creationDate;
-        creationDate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now());
+        this.creationDate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now());
     }
 
     public String getCreationDate() {

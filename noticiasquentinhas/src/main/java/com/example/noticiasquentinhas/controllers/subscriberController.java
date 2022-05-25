@@ -25,11 +25,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
-
 @Controller
 public class subscriberController {
 
@@ -58,6 +59,7 @@ public class subscriberController {
         ArrayList<News> newsList = publisherController.lastTenNews(newsService.listAllNews());
         Collections.reverse(newsList);
         model.addAttribute("newsList",newsList);
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         return "subscriber/index";
     }
 
@@ -72,14 +74,12 @@ public class subscriberController {
         model.addAttribute("topicslist", topicsList);
         model.addAttribute("checkedTopics", new TopicFormSubscriber());
         model.addAttribute("topicsSize", topicsList.size());
-        System.out.println(topicsList.toString());
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         return "subscriber/index";
     }
 
     @PostMapping("/subscriber/topic")
     public String getSubscribedTopicsForm(@ModelAttribute("checkedTopics") TopicFormSubscriber topicFormSubscriber) throws MalformedURLException {
-        System.out.println(Arrays.toString(topicFormSubscriber.getName()));
-        System.out.println(topicService.getTopicsByName(topicFormSubscriber));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         for (Topics t: topicService.getTopicsByName(topicFormSubscriber)) {
             t.addSubscriber(userService.search(authentication.getName()));
@@ -90,31 +90,77 @@ public class subscriberController {
     }
 
     @GetMapping("/subscriber/news")
-    public String returnToSubscriberNews(Model model) throws MalformedURLException {
+    public String returnToSubscriberNews(@RequestParam(name="topicName", required = false, defaultValue = "none") String topic,
+            @RequestParam(name="date1", required = false, defaultValue = "none") String date1,
+            @RequestParam(name="date2", required = false, defaultValue = "none") String date2,
+            @RequestParam(name="valid", required = false, defaultValue = "none") String validation,
+            Model model) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         model.addAttribute("linkPath","news");
         ArrayList<Topics> topicsList = topicService.topicsList();
         model.addAttribute("topicsList", topicsList);
         model.addAttribute("topicsSize", topicsList.size());
         model.addAttribute("topicToSearch", new TopicFormSearch());
+        if(validation.equals("true")) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime datetime1 = LocalDateTime.parse(date1,formatter);
+            LocalDateTime datetime2 = LocalDateTime.parse(date2,formatter);
+            ArrayList<News> newsFromTimeStamp = newsService.getNewsFromTimestamp(topicService.search(topic),datetime1,datetime2);
+            model.addAttribute("newsFromTimeStamp",newsFromTimeStamp);
+            model.addAttribute("newsFromTimeStampSize",newsFromTimeStamp.size());
+        }
+        model.addAttribute("validation",validation);
         return "subscriber/index";
     }
 
     @PostMapping("/subscriber/news")
     public String getSubscribedTopicsForm(@ModelAttribute("checkedTopics") TopicFormSearch topicFormsearch) throws MalformedURLException {
-        System.out.println(topicFormsearch.toString());
-
-        return "redirect:/";
+        try{
+            topicFormsearch.setDate1(topicFormsearch.getDate1().replace("T"," "));
+            topicFormsearch.setDate2(topicFormsearch.getDate2().replace("T"," "));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime datetime1 = LocalDateTime.parse(topicFormsearch.getDate1(),formatter);
+            LocalDateTime datetime2 = LocalDateTime.parse(topicFormsearch.getDate2(),formatter);
+            String stringDate1 = topicFormsearch.getDate1();
+            String stringDate2 = topicFormsearch.getDate2();
+            if(datetime1.isBefore(datetime2))
+                return "redirect:/subscriber/news?"+"topicName="+topicFormsearch.getName()+"&date1="+stringDate1+"&date2="+stringDate2+"&valid=true";
+        }catch (Exception e){
+            return "redirect:/";
+        }
+        return "redirect:/subscriber/news?valid=false";
     }
 
     @GetMapping("/subscriber/lastNews")
-    public String returnToSubscriberLastNews(Model model) throws MalformedURLException {
+    public String returnToSubscriberLastNews(Model model,
+             @RequestParam(name="topic", required = false, defaultValue = "none") String topic) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","lastNews");
+        ArrayList<Topics> topicsList = topicService.topicsList();
+        model.addAttribute("topicsList", topicsList);
+        model.addAttribute("topicForm", new TopicForm());
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
+        if(!topic.equals("none")){
+            News lastNews= newsService.getLastNewsFromTopic(topic);
+            if(lastNews != null) {
+                model.addAttribute("lastNew", lastNews);
+                model.addAttribute("validation", "true");
+            }else{
+                model.addAttribute("validation", "false");
+            }
 
+        }
         return "subscriber/index";
+    }
+
+    @PostMapping("/subscriber/lastNews")
+    public String returnToSubscriberLastNews(@ModelAttribute("checkedTopics") TopicForm topicForm) throws MalformedURLException {
+        if(!topicForm.getName().equals(""))
+            return "redirect:/subscriber/lastNews?topic=" + topicForm.getName();
+        return "redirect:/";
     }
 
     @GetMapping("/subscriber/removeTopic")
@@ -126,6 +172,7 @@ public class subscriberController {
         model.addAttribute("subscribedTopics", subscribedTopics);
         model.addAttribute("removeTopic", new TopicForm());
         model.addAttribute("topicsSize", subscribedTopics.size());
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         return "subscriber/index";
     }
 
@@ -148,6 +195,7 @@ public class subscriberController {
         UserRegistrationDto userRegistrationDto = new UserRegistrationDto(userService.search(authentication.getName()));
         model.addAttribute("userData",userRegistrationDto);
         model.addAttribute("fileImagePath",userRegistrationDto.getProfilePicPath());
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         return "subscriber/index";
     }
 

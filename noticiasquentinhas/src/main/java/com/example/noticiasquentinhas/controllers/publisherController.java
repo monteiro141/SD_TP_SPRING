@@ -1,5 +1,7 @@
 package com.example.noticiasquentinhas.controllers;
 
+
+
 import com.example.noticiasquentinhas.entities.*;
 import com.example.noticiasquentinhas.repository.NewsRepository;
 import com.example.noticiasquentinhas.service.NewsService;
@@ -51,7 +53,8 @@ public class publisherController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","home");
-        model.addAttribute("pathimage",userService.search(authentication.getName()).getProfilePicPath());
+        model.addAttribute("pathImage",userService.search(authentication.getName()).getProfilePicPath());
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         ArrayList<News> newsList = lastTenNews(newsService.listAllNews());
         Collections.reverse(newsList);
         model.addAttribute("newsList",newsList);
@@ -75,6 +78,7 @@ public class publisherController {
     public String returnToPublisherAddTopic(@RequestParam(name="create", required = false, defaultValue = "none") String name, Model model) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         model.addAttribute("linkPath","addTopic");
         model.addAttribute("addTopic",new TopicForm());
         model.addAttribute("create",name);
@@ -95,6 +99,7 @@ public class publisherController {
     public String returnToPublishersearchTopic(Model model) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         model.addAttribute("linkPath","searchTopic");
         model.addAttribute("listTopics", (topicService.topicsList()));
         model.addAttribute("topicsSize", topicService.topicsList().size());
@@ -106,6 +111,7 @@ public class publisherController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","createNews");
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         model.addAttribute("newsForm", new NewsForm());
         model.addAttribute("topicsList",topicService.topicsList());
         model.addAttribute("create",name);
@@ -154,6 +160,7 @@ public class publisherController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","listNews");
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         ArrayList<News> newsList = newsService.listNewsUser(authentication.getName());
         Collections.reverse(newsList);
         model.addAttribute("newsList",newsList);
@@ -166,6 +173,7 @@ public class publisherController {
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","editNews");
         model.addAttribute("edit",name);
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         //Optional<News> optional = newsService.findNew(id);
         News newsEdit = newsService.findNew(id);
         //newsEdit = optional.get();
@@ -214,7 +222,7 @@ public class publisherController {
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","profile");
         UserRegistrationDto userRegistrationDto = new UserRegistrationDto(userService.search(authentication.getName()));
-
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         model.addAttribute("userData",userRegistrationDto);
         model.addAttribute("fileImagePath",userRegistrationDto.getProfilePicPath());
         return "publisher/index";
