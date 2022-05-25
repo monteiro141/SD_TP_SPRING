@@ -76,8 +76,8 @@ public class NewsServiceImpl implements NewsService{
     }
 
     @Override
-    public News getLastNewsFromTopic(String topicName){
-        ArrayList<News> newsFromTopic= newsRepository.findAllByTopics_news(topicName);
+    public News getLastNewsFromTopic(Integer topicID){
+        ArrayList<News> newsFromTopic= newsRepository.findAllByTopics_news(topicID);
         if(newsFromTopic.size()!=0)
             return newsFromTopic.get(newsFromTopic.size()-1);
         return null;

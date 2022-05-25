@@ -56,9 +56,10 @@
                 <label for="content">Corpo da notícia</label>
                 <textarea class="form-control" id="content" placeholder="Conteúdo"  rows="7"  maxlength="180" th:field="*{content}"></textarea>
             </div>
+            <div class="mt-4 col-md-12"></div>
             <div class="form-group">
                 <div class="text-center">
-                    <input type="file" class="fileImage" id="fileImage" name="fileImage" accept="image/png, image/jpeg">
+                    <input type="file" class="fileImage" id="fileImage" name="fileImage" accept="image/png, image/jpeg" required>
                 </div>
             </div>
             <div class="mt-4 col-md-12"></div>

@@ -36,8 +36,6 @@
                 <div class="d-flex">
                     <a type="button" class="btn btn-warning" th:href="@{/profile}">Perfil</a>
                     <div class="px-2"></div>
-                    <input type="text" readonly="readonly" disabled class="btn btn-warning" th:value="${loggedInUser}"/>
-                    <div class="px-2"></div>
                     <form th:action="@{/logout}" method="post">
                         <input type="submit" class="btn btn-warning" value="logout"/>
                     </form>

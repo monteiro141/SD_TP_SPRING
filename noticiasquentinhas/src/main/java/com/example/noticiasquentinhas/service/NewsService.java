@@ -21,5 +21,5 @@ public interface NewsService {
     public News findNew(Integer id);
     public News saveEditNew(News news);
     public ArrayList<News>getNewsFromTimestamp(Topics topic, LocalDateTime date1, LocalDateTime date2);
-    public News getLastNewsFromTopic(String topicName);
+    public News getLastNewsFromTopic(Integer topicID);
 }

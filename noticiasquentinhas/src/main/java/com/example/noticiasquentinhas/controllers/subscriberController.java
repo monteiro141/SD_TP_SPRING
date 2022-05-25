@@ -11,16 +11,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -89,8 +88,8 @@ public class subscriberController {
         return "redirect:/";
     }
 
-    @GetMapping("/subscriber/news")
-    public String returnToSubscriberNews(@RequestParam(name="topicName", required = false, defaultValue = "none") String topic,
+    @GetMapping({"/subscriber/news/{id}", "/subscriber/news"})
+    public String returnToSubscriberNews(@PathVariable(value="id",required = false) Integer id,
             @RequestParam(name="date1", required = false, defaultValue = "none") String date1,
             @RequestParam(name="date2", required = false, defaultValue = "none") String date2,
             @RequestParam(name="valid", required = false, defaultValue = "none") String validation,
@@ -107,7 +106,7 @@ public class subscriberController {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime datetime1 = LocalDateTime.parse(date1,formatter);
             LocalDateTime datetime2 = LocalDateTime.parse(date2,formatter);
-            ArrayList<News> newsFromTimeStamp = newsService.getNewsFromTimestamp(topicService.search(topic),datetime1,datetime2);
+            ArrayList<News> newsFromTimeStamp = newsService.getNewsFromTimestamp(topicService.getTopicByID(id),datetime1,datetime2);
             model.addAttribute("newsFromTimeStamp",newsFromTimeStamp);
             model.addAttribute("newsFromTimeStampSize",newsFromTimeStamp.size());
         }
@@ -126,25 +125,27 @@ public class subscriberController {
             String stringDate1 = topicFormsearch.getDate1();
             String stringDate2 = topicFormsearch.getDate2();
             if(datetime1.isBefore(datetime2))
-                return "redirect:/subscriber/news?"+"topicName="+topicFormsearch.getName()+"&date1="+stringDate1+"&date2="+stringDate2+"&valid=true";
+                return "redirect:/subscriber/news/"+ topicService.search(topicFormsearch.getName()).getTopic_id()+"?date1="+stringDate1+"&date2="+stringDate2+"&valid=true";
         }catch (Exception e){
             return "redirect:/";
         }
         return "redirect:/subscriber/news?valid=false";
     }
 
-    @GetMapping("/subscriber/lastNews")
-    public String returnToSubscriberLastNews(Model model,
-             @RequestParam(name="topic", required = false, defaultValue = "none") String topic) throws MalformedURLException {
+    @GetMapping({"/subscriber/lastNews/{id}", "/subscriber/lastNews"})
+    public String returnToSubscriberLastNews(Model model, @PathVariable(value="id",required = false) Integer id) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","lastNews");
         ArrayList<Topics> topicsList = topicService.topicsList();
         model.addAttribute("topicsList", topicsList);
+        model.addAttribute("topicsListSize", topicsList.size());
         model.addAttribute("topicForm", new TopicForm());
         model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
-        if(!topic.equals("none")){
-            News lastNews= newsService.getLastNewsFromTopic(topic);
+
+        if(id!=null){
+            System.out.println(id);
+            News lastNews= newsService.getLastNewsFromTopic(id);
             if(lastNews != null) {
                 model.addAttribute("lastNew", lastNews);
                 model.addAttribute("validation", "true");
@@ -159,7 +160,7 @@ public class subscriberController {
     @PostMapping("/subscriber/lastNews")
     public String returnToSubscriberLastNews(@ModelAttribute("checkedTopics") TopicForm topicForm) throws MalformedURLException {
         if(!topicForm.getName().equals(""))
-            return "redirect:/subscriber/lastNews?topic=" + topicForm.getName();
+            return "redirect:/subscriber/lastNews/" + topicService.search(topicForm.getName()).getTopic_id();
         return "redirect:/";
     }
 

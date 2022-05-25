@@ -63,5 +63,9 @@ public class TopicServiceImpl implements TopicService{
         return topicsArrayList;
     }
 
+    public Topics getTopicByID(Integer id){
+        return topicsRepository.findById(id).get();
+    }
+
 
 }
