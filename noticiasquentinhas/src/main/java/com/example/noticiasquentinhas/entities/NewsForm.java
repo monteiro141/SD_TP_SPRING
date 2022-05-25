@@ -2,6 +2,7 @@ package com.example.noticiasquentinhas.entities;
 
 import org.mockito.internal.verification.Times;
 
+import javax.persistence.Transient;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ public class NewsForm {
     private String timeEnd;
     private String creationDate;
     private String topic;
+    private String newsThumbnail;
 
     public NewsForm() {
         this.creationDate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now());

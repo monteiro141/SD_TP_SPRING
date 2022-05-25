@@ -12,6 +12,8 @@ public class News {
     private String title;
     private String content;
     private String creationDate;
+    private String newsThumbnail;
+    private String newsThumbnailPath;
 
     @ManyToOne
     @JoinColumn(name="news_topics", nullable = false)
@@ -80,15 +82,27 @@ public class News {
         this.publisher = publisher;
     }
 
-    @Override
-    public String toString() {
-        return "News{" +
-                "news_id=" + news_id +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", creationDate='" + creationDate + '\'' +
-                ", topics_news=" + topics_news +
-                ", publisher=" + publisher +
-                '}';
+    public String getNewsThumbnail() {
+        return newsThumbnail;
     }
+
+    public void setNewsThumbnail(String newsThumbnail) {
+        this.newsThumbnail = newsThumbnail;
+    }
+
+    public String getNewsThumbnailPath() {
+        return getProfilePicPath();
+    }
+
+    public void setNewsThumbnailPath(String newsThumbnailPath) {
+        this.newsThumbnailPath = newsThumbnailPath;
+    }
+
+    @Transient
+    public String getProfilePicPath(){
+        if(newsThumbnail == null || news_id == null)
+            return "/news-thumbnail/0/defaultThumbnail.png";
+        return "/news-thumbnail/" + news_id + "/" + newsThumbnail;
+    }
+
 }
