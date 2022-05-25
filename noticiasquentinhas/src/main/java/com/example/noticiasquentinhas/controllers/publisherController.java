@@ -1,5 +1,7 @@
 package com.example.noticiasquentinhas.controllers;
 
+
+
 import com.example.noticiasquentinhas.entities.*;
 import com.example.noticiasquentinhas.repository.NewsRepository;
 import com.example.noticiasquentinhas.service.NewsService;
@@ -51,6 +53,8 @@ public class publisherController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","home");
+        model.addAttribute("pathImage",userService.search(authentication.getName()).getProfilePicPath());
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         ArrayList<News> newsList = lastTenNews(newsService.listAllNews());
         Collections.reverse(newsList);
         model.addAttribute("newsList",newsList);
@@ -74,6 +78,7 @@ public class publisherController {
     public String returnToPublisherAddTopic(@RequestParam(name="create", required = false, defaultValue = "none") String name, Model model) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         model.addAttribute("linkPath","addTopic");
         model.addAttribute("addTopic",new TopicForm());
         model.addAttribute("create",name);
@@ -94,6 +99,7 @@ public class publisherController {
     public String returnToPublishersearchTopic(Model model) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         model.addAttribute("linkPath","searchTopic");
         model.addAttribute("listTopics", (topicService.topicsList()));
         model.addAttribute("topicsSize", topicService.topicsList().size());
@@ -105,6 +111,7 @@ public class publisherController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","createNews");
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         model.addAttribute("newsForm", new NewsForm());
         model.addAttribute("topicsList",topicService.topicsList());
         model.addAttribute("create",name);
@@ -113,12 +120,35 @@ public class publisherController {
     }
 
     @PostMapping("/publisher/createNewsButton")
-    public String creatingANews(@ModelAttribute("newsForm") NewsForm newsForm){
+    public String creatingANews(@RequestParam(value = "fileImage") MultipartFile multipartFile,
+                                @ModelAttribute("newsForm") NewsForm newsForm){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try{
-            newsService.save(newsForm,
+            News newsSaved = newsService.save(newsForm,
                     userService.search(authentication.getName()),
                     topicService.search(newsForm.getTopic()));
+            if(multipartFile.getOriginalFilename() != null && !multipartFile.getOriginalFilename().equals("")) {
+                String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+                System.out.println(fileName);
+                newsSaved.setNewsThumbnail(fileName);
+                String uploadDir = "news-thumbnail/" + newsSaved.getNews_id();
+                Path uploadPath = Paths.get(uploadDir);
+                if (!Files.exists(uploadPath)) {
+                    try {
+                        Files.createDirectories(uploadPath);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                try (InputStream inputStream = multipartFile.getInputStream()) {
+                    Path filepath = uploadPath.resolve(fileName);
+                    Files.copy(inputStream, filepath, StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            newsService.saveEditNew(newsSaved);
+
         } catch (Exception e){
             return "redirect:/publisher/createNews?create=fail";
         }
@@ -130,6 +160,7 @@ public class publisherController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","listNews");
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         ArrayList<News> newsList = newsService.listNewsUser(authentication.getName());
         Collections.reverse(newsList);
         model.addAttribute("newsList",newsList);
@@ -142,20 +173,42 @@ public class publisherController {
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","editNews");
         model.addAttribute("edit",name);
-        Optional<News> optional = newsService.findNew(id);
-        News newsEdit = null;
-        if(optional.isPresent()){
-            newsEdit = optional.get();
-        }
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
+        //Optional<News> optional = newsService.findNew(id);
+        News newsEdit = newsService.findNew(id);
+        //newsEdit = optional.get();
         model.addAttribute("theNew",newsEdit);
         return "publisher/index";
     }
 
     @PostMapping("/publisher/editNewsButton")
-    public String saveNew(@ModelAttribute("theNew") News news){
-        newsService.saveEditNew(news);
+    public String saveNew(@ModelAttribute("theNew") News news,
+                          @RequestParam(value = "fileImage") MultipartFile multipartFile){
         try{
-            newsService.saveEditNew(news);
+            String oldThumbnail = newsService.findNew(news.getNews_id()).getNewsThumbnail();
+            News newsSaved = newsService.saveEditNew(news);
+            if(multipartFile.getOriginalFilename() != null && !multipartFile.getOriginalFilename().equals("")) {
+                String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+                newsSaved.setNewsThumbnail(fileName);
+                String uploadDir = "news-thumbnail/" + newsSaved.getNews_id();
+                Path uploadPath = Paths.get(uploadDir);
+                if (!Files.exists(uploadPath)) {
+                    try {
+                        Files.createDirectories(uploadPath);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                try (InputStream inputStream = multipartFile.getInputStream()) {
+                    Path filepath = uploadPath.resolve(fileName);
+                    Files.copy(inputStream, filepath, StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                newsSaved.setNewsThumbnail(oldThumbnail);
+            }
+            newsService.saveEditNew(newsSaved);
         } catch (Exception e){
             return "redirect:/publisher/editNews/"+news.getNews_id()+"?edit=fail";
         }
@@ -169,7 +222,7 @@ public class publisherController {
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","profile");
         UserRegistrationDto userRegistrationDto = new UserRegistrationDto(userService.search(authentication.getName()));
-
+        model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         model.addAttribute("userData",userRegistrationDto);
         model.addAttribute("fileImagePath",userRegistrationDto.getProfilePicPath());
         return "publisher/index";
@@ -180,12 +233,8 @@ public class publisherController {
                           @ModelAttribute("fileImagePath") String fileImagePath,
                           @RequestParam(value = "fileImage") MultipartFile multipartFile){
         User fetchedUser = userService.search(userRegistrationDto.getEmail());
-        User savedUser;
-        System.out.println(multipartFile.getOriginalFilename());
-        System.out.println(fileImagePath);
         if(multipartFile.getOriginalFilename() != null && !multipartFile.getOriginalFilename().equals("")){
             String fileName= StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
-            System.out.println(fileName);
             fetchedUser.setProfilePic(fileName);
             String uploadDir= "profile-pics/"+ fetchedUser.getId();
             Path uploadPath = Paths.get(uploadDir);
@@ -204,12 +253,11 @@ public class publisherController {
             }
         }
         if(userRegistrationDto.getPassword() != null && !userRegistrationDto.getPassword().equals("")){
-            savedUser = userService.save(fetchedUser,userRegistrationDto.getPassword());
+            userService.save(fetchedUser,userRegistrationDto.getPassword());
         }else{
-            savedUser = userService.save(fetchedUser);
+            userService.save(fetchedUser);
         }
 
-        System.out.println(savedUser);
 
 
         return "redirect:/";

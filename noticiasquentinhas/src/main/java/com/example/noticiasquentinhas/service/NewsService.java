@@ -7,6 +7,7 @@ import com.example.noticiasquentinhas.entities.User;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
@@ -17,6 +18,8 @@ public interface NewsService {
     public ArrayList<News> listNewsUser(String email);
     public Set<News> listNewsTopic(Timestamp timeStart,Timestamp timeEnd,String topic);
     public ArrayList<News> listAllNews();
-    public Optional<News> findNew(Integer id);
+    public News findNew(Integer id);
     public News saveEditNew(News news);
+    public ArrayList<News>getNewsFromTimestamp(Topics topic, LocalDateTime date1, LocalDateTime date2);
+    public News getLastNewsFromTopic(Integer topicID);
 }

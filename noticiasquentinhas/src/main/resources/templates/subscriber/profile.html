@@ -34,7 +34,7 @@
 
         }
     </script>
-    <form class="form-horizontal" role="form" method="post" th:action="@{/subscriber/saveProfile}" th:object="${userData}" enctype="multipart/form-data">
+    <form class="form-horizontal" style="text-align: center" role="form" method="post" th:action="@{/subscriber/saveProfile}" th:object="${userData}" enctype="multipart/form-data">
         <div class="container bootstrap snippets bootdey">
             <h1 class="text-primary">Edit Profile</h1>
             <hr>
@@ -62,25 +62,25 @@
 
                     <div class="form-group">
                         <label class="col-lg-3 control-label">First name:</label>
-                        <div class="col-lg-8">
+                        <div class="col-lg-8" style="margin: auto">
                             <input class="form-control" type="text" th:value="${firstName}" th:field="*{firstName}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-lg-3 control-label">Last name:</label>
-                        <div class="col-lg-8">
+                        <div class="col-lg-8" style="margin: auto">
                             <input class="form-control" type="text" th:value="${lastName}" th:field="*{lastName}" >
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-lg-3 control-label">Password:</label>
-                        <div class="col-lg-8">
+                        <div class="col-lg-8" style="margin: auto">
                             <input class="form-control" type="password" th:value="${password}" th:field="*{password}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-lg-3 control-label">Email:</label>
-                        <div class="col-lg-8">
+                        <div class="col-lg-8" style="margin: auto">
                             <input class="form-control"  readonly=readonly type="email" th:value="${email}" th:field="*{email}">
                         </div>
                     </div>

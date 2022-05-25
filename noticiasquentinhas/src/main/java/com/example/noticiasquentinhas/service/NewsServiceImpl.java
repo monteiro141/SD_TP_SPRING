@@ -5,6 +5,7 @@ import com.example.noticiasquentinhas.entities.NewsForm;
 import com.example.noticiasquentinhas.entities.Topics;
 import com.example.noticiasquentinhas.entities.User;
 import com.example.noticiasquentinhas.repository.NewsRepository;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,12 +51,35 @@ public class NewsServiceImpl implements NewsService{
     }
 
     @Override
-    public Optional<News> findNew(Integer id){
-        return newsRepository.findById(id);
+    public News findNew(Integer id){
+        return newsRepository.findById(id).get();
     }
+
+
 
     @Override
     public News saveEditNew(News news){
         return newsRepository.save(news);
+    }
+
+    @Override
+    public ArrayList<News>getNewsFromTimestamp(Topics topic, LocalDateTime date1, LocalDateTime date2){
+        ArrayList<News> newsFromTimeStamp= new ArrayList<>();
+        ArrayList<News> newsFromTopic= newsRepository.findAllByTopics_news(topic.getName());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        for (News news : newsFromTopic){
+            if(date1.isBefore(LocalDateTime.parse(news.getCreationDate(),formatter)) && date2.isAfter(LocalDateTime.parse(news.getCreationDate(),formatter))){
+                newsFromTimeStamp.add(news);
+            }
+        }
+        return newsFromTimeStamp;
+    }
+
+    @Override
+    public News getLastNewsFromTopic(Integer topicID){
+        ArrayList<News> newsFromTopic= newsRepository.findAllByTopics_news(topicID);
+        if(newsFromTopic.size()!=0)
+            return newsFromTopic.get(newsFromTopic.size()-1);
+        return null;
     }
 }

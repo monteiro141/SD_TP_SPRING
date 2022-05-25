@@ -127,19 +127,4 @@ public class User {
         this.topics_subscriber = topics_subscriber;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", enabled=" + enabled +
-                ", role='" + role + '\'' +
-                ", profilePic='" + profilePic + '\'' +
-                ", news_publisher=" + news_publisher +
-                ", topics_subscriber=" + topics_subscriber +
-                '}';
-    }
 }

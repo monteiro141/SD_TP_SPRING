@@ -17,4 +17,5 @@ public interface TopicService {
     public ArrayList<Topics> getUnsubscribedTopics(User Subscriber);
     public ArrayList<Topics> getSubscribedTopics(User Subscriber);
     public ArrayList<Topics> getTopicsByName(TopicFormSubscriber topicFormSubscribers);
+    public Topics getTopicByID(Integer id);
 }
