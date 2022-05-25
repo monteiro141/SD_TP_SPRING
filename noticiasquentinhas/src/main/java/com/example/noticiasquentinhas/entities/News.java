@@ -80,15 +80,4 @@ public class News {
         this.publisher = publisher;
     }
 
-    @Override
-    public String toString() {
-        return "News{" +
-                "news_id=" + news_id +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", creationDate='" + creationDate + '\'' +
-                ", topics_news=" + topics_news +
-                ", publisher=" + publisher +
-                '}';
-    }
 }

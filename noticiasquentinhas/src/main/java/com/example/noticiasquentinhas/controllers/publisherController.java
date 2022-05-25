@@ -51,6 +51,7 @@ public class publisherController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","home");
+        model.addAttribute("pathimage",userService.search(authentication.getName()).getProfilePicPath());
         ArrayList<News> newsList = lastTenNews(newsService.listAllNews());
         Collections.reverse(newsList);
         model.addAttribute("newsList",newsList);
@@ -142,11 +143,9 @@ public class publisherController {
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","editNews");
         model.addAttribute("edit",name);
-        Optional<News> optional = newsService.findNew(id);
-        News newsEdit = null;
-        if(optional.isPresent()){
-            newsEdit = optional.get();
-        }
+        //Optional<News> optional = newsService.findNew(id);
+        News newsEdit = newsService.findNew(id);
+        //newsEdit = optional.get();
         model.addAttribute("theNew",newsEdit);
         return "publisher/index";
     }

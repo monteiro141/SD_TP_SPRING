@@ -17,6 +17,6 @@ public interface NewsService {
     public ArrayList<News> listNewsUser(String email);
     public Set<News> listNewsTopic(Timestamp timeStart,Timestamp timeEnd,String topic);
     public ArrayList<News> listAllNews();
-    public Optional<News> findNew(Integer id);
+    public News findNew(Integer id);
     public News saveEditNew(News news);
 }

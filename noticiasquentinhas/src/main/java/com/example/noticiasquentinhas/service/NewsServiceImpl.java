@@ -50,8 +50,8 @@ public class NewsServiceImpl implements NewsService{
     }
 
     @Override
-    public Optional<News> findNew(Integer id){
-        return newsRepository.findById(id);
+    public News findNew(Integer id){
+        return newsRepository.findById(id).get();
     }
 
     @Override
