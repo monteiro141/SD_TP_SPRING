@@ -97,8 +97,15 @@ public class subscriberController {
         ArrayList<Topics> topicsList = topicService.topicsList();
         model.addAttribute("topicsList", topicsList);
         model.addAttribute("topicsSize", topicsList.size());
-        model.addAttribute("topicToSearch", new TopicForm());
+        model.addAttribute("topicToSearch", new TopicFormSearch());
         return "subscriber/index";
+    }
+
+    @PostMapping("/subscriber/news")
+    public String getSubscribedTopicsForm(@ModelAttribute("checkedTopics") TopicFormSearch topicFormsearch) throws MalformedURLException {
+        System.out.println(topicFormsearch.toString());
+
+        return "redirect:/";
     }
 
     @GetMapping("/subscriber/lastNews")

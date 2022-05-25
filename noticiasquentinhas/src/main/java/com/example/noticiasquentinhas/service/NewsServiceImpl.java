@@ -54,6 +54,8 @@ public class NewsServiceImpl implements NewsService{
         return newsRepository.findById(id).get();
     }
 
+
+
     @Override
     public News saveEditNew(News news){
         return newsRepository.save(news);
