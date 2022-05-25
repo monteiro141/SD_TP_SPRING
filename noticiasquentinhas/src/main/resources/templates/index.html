@@ -49,7 +49,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a th:href="@{/publisher/}" class="nav-link px-2 text-white">Consult news from a topic in a timestamp</a>
+                        <a href="" class="nav-link px-2 text-white">Consult news from a topic in a timestamp</a>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link px-2 text-white">Consult last news from a topic</a>
@@ -83,7 +83,7 @@
                     <strong class="d-inline-block mb-2 text-success"  th:text="${newIteration.topics_news.name}"></strong>
                     <h3 class="mb-0 text-break" th:text="${newIteration.title}"></h3>
                     <div class="mb-1 text-muted text-break"th:text="${newIteration.creationDate}" ></div>
-                    <div class="mb-1 text-muted text-break"th:text="${newIteration.publisher.name}" ></div>
+                    <div class="mb-1 text-muted text-break" th:text="${newIteration.publisher.firstName}+' '+${newIteration.publisher.lastName}"></div>
                     <p class="mb-auto" th:text="${newIteration.content}"></p>
 
                 </div>

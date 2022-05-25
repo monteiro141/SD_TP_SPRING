@@ -12,7 +12,7 @@
                     <strong class="d-inline-block mb-2 text-success"  th:text="${newIteration.topics_news.name}"></strong>
                     <h3 class="mb-0 text-break" th:text="${newIteration.title}"></h3>
                     <div class="mb-1 text-muted text-break"th:text="${newIteration.creationDate}" ></div>
-                    <div class="mb-1 text-muted text-break"th:text="${newIteration.publisher.name}" ></div>
+                    <div class="mb-1 text-muted text-break" th:text="${newIteration.publisher.firstName}+' '+${newIteration.publisher.lastName}"></div>
                     <p class="mb-auto" th:text="${newIteration.content}"></p>
 
                 </div>
