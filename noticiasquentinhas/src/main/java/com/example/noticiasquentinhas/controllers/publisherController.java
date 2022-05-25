@@ -233,6 +233,8 @@ public class publisherController {
                           @ModelAttribute("fileImagePath") String fileImagePath,
                           @RequestParam(value = "fileImage") MultipartFile multipartFile){
         User fetchedUser = userService.search(userRegistrationDto.getEmail());
+        fetchedUser.setFirstName(userRegistrationDto.getFirstName());
+        fetchedUser.setLastName(userRegistrationDto.getLastName());
         if(multipartFile.getOriginalFilename() != null && !multipartFile.getOriginalFilename().equals("")){
             String fileName= StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
             fetchedUser.setProfilePic(fileName);

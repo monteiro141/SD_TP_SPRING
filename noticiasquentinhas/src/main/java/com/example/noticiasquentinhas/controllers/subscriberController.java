@@ -205,6 +205,8 @@ public class subscriberController {
                           @ModelAttribute("fileImagePath") String fileImagePath,
                           @RequestParam(value = "fileImage") MultipartFile multipartFile){
         User fetchedUser = userService.search(userRegistrationDto.getEmail());
+        fetchedUser.setFirstName(userRegistrationDto.getFirstName());
+        fetchedUser.setLastName(userRegistrationDto.getLastName());
         User savedUser;
         System.out.println(multipartFile.getOriginalFilename());
         System.out.println(fileImagePath);
@@ -234,7 +236,7 @@ public class subscriberController {
             savedUser = userService.save(fetchedUser);
         }
 
-        System.out.println(savedUser);
+        System.out.println(savedUser.getFirstName());
 
 
         return "redirect:/";
