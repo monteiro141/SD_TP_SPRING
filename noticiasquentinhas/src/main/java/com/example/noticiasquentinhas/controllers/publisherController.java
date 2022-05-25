@@ -113,12 +113,35 @@ public class publisherController {
     }
 
     @PostMapping("/publisher/createNewsButton")
-    public String creatingANews(@ModelAttribute("newsForm") NewsForm newsForm){
+    public String creatingANews(@RequestParam(value = "fileImage") MultipartFile multipartFile,
+            @ModelAttribute("newsForm") NewsForm newsForm){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try{
-            newsService.save(newsForm,
+            News newsSaved = newsService.save(newsForm,
                     userService.search(authentication.getName()),
                     topicService.search(newsForm.getTopic()));
+            if(multipartFile.getOriginalFilename() != null && !multipartFile.getOriginalFilename().equals("")) {
+                String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+                System.out.println(fileName);
+                newsSaved.setNewsThumbnail(fileName);
+                String uploadDir = "news-thumbnail/" + newsSaved.getNews_id();
+                Path uploadPath = Paths.get(uploadDir);
+                if (!Files.exists(uploadPath)) {
+                    try {
+                        Files.createDirectories(uploadPath);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                try (InputStream inputStream = multipartFile.getInputStream()) {
+                    Path filepath = uploadPath.resolve(fileName);
+                    Files.copy(inputStream, filepath, StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            newsService.saveEditNew(newsSaved);
+
         } catch (Exception e){
             return "redirect:/publisher/createNews?create=fail";
         }
@@ -147,6 +170,7 @@ public class publisherController {
         if(optional.isPresent()){
             newsEdit = optional.get();
         }
+
         model.addAttribute("theNew",newsEdit);
         return "publisher/index";
     }
