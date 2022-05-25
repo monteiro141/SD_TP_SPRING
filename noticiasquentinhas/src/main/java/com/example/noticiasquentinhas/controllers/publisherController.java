@@ -114,12 +114,35 @@ public class publisherController {
     }
 
     @PostMapping("/publisher/createNewsButton")
-    public String creatingANews(@ModelAttribute("newsForm") NewsForm newsForm){
+    public String creatingANews(@RequestParam(value = "fileImage") MultipartFile multipartFile,
+                                @ModelAttribute("newsForm") NewsForm newsForm){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try{
-            newsService.save(newsForm,
+            News newsSaved = newsService.save(newsForm,
                     userService.search(authentication.getName()),
                     topicService.search(newsForm.getTopic()));
+            if(multipartFile.getOriginalFilename() != null && !multipartFile.getOriginalFilename().equals("")) {
+                String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+                System.out.println(fileName);
+                newsSaved.setNewsThumbnail(fileName);
+                String uploadDir = "news-thumbnail/" + newsSaved.getNews_id();
+                Path uploadPath = Paths.get(uploadDir);
+                if (!Files.exists(uploadPath)) {
+                    try {
+                        Files.createDirectories(uploadPath);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                try (InputStream inputStream = multipartFile.getInputStream()) {
+                    Path filepath = uploadPath.resolve(fileName);
+                    Files.copy(inputStream, filepath, StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            newsService.saveEditNew(newsSaved);
+
         } catch (Exception e){
             return "redirect:/publisher/createNews?create=fail";
         }
@@ -151,10 +174,33 @@ public class publisherController {
     }
 
     @PostMapping("/publisher/editNewsButton")
-    public String saveNew(@ModelAttribute("theNew") News news){
-        newsService.saveEditNew(news);
+    public String saveNew(@ModelAttribute("theNew") News news,
+                          @RequestParam(value = "fileImage") MultipartFile multipartFile){
         try{
-            newsService.saveEditNew(news);
+            String oldThumbnail = newsService.findNew(news.getNews_id()).getNewsThumbnail();
+            News newsSaved = newsService.saveEditNew(news);
+            if(multipartFile.getOriginalFilename() != null && !multipartFile.getOriginalFilename().equals("")) {
+                String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+                newsSaved.setNewsThumbnail(fileName);
+                String uploadDir = "news-thumbnail/" + newsSaved.getNews_id();
+                Path uploadPath = Paths.get(uploadDir);
+                if (!Files.exists(uploadPath)) {
+                    try {
+                        Files.createDirectories(uploadPath);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                try (InputStream inputStream = multipartFile.getInputStream()) {
+                    Path filepath = uploadPath.resolve(fileName);
+                    Files.copy(inputStream, filepath, StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                newsSaved.setNewsThumbnail(oldThumbnail);
+            }
+            newsService.saveEditNew(newsSaved);
         } catch (Exception e){
             return "redirect:/publisher/editNews/"+news.getNews_id()+"?edit=fail";
         }
@@ -179,12 +225,8 @@ public class publisherController {
                           @ModelAttribute("fileImagePath") String fileImagePath,
                           @RequestParam(value = "fileImage") MultipartFile multipartFile){
         User fetchedUser = userService.search(userRegistrationDto.getEmail());
-        User savedUser;
-        System.out.println(multipartFile.getOriginalFilename());
-        System.out.println(fileImagePath);
         if(multipartFile.getOriginalFilename() != null && !multipartFile.getOriginalFilename().equals("")){
             String fileName= StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
-            System.out.println(fileName);
             fetchedUser.setProfilePic(fileName);
             String uploadDir= "profile-pics/"+ fetchedUser.getId();
             Path uploadPath = Paths.get(uploadDir);
@@ -203,12 +245,11 @@ public class publisherController {
             }
         }
         if(userRegistrationDto.getPassword() != null && !userRegistrationDto.getPassword().equals("")){
-            savedUser = userService.save(fetchedUser,userRegistrationDto.getPassword());
+            userService.save(fetchedUser,userRegistrationDto.getPassword());
         }else{
-            savedUser = userService.save(fetchedUser);
+            userService.save(fetchedUser);
         }
 
-        System.out.println(savedUser);
 
 
         return "redirect:/";

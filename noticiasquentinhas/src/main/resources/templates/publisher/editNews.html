@@ -4,7 +4,7 @@
             <h1 class="display-2 fst-italic">Notícias Quentinhas</h1>
         </div>
     </div>
-    <form class="form-signin" th:action="@{/publisher/editNewsButton}" th:object="${theNew}" method="POST">
+    <form class="form-signin" th:action="@{/publisher/editNewsButton}" th:object="${theNew}" method="POST" enctype="multipart/form-data">
         <div th:if="${edit} == 'fail'" class="alert alert-danger center-div text-center">
             Falha ao editar a notícia!
         </div>
@@ -16,12 +16,16 @@
             <label for="content">Corpo da notícia</label>
             <textarea class="form-control" id="content" placeholder="Conteúdo"  rows="7"  maxlength="180" th:field="*{content}"></textarea>
         </div>
+        <div class="form-group">
+            <div class="text-center">
+                <input type="file" class="fileImage" id="fileImage" name="fileImage" accept="image/png, image/jpeg">
+            </div>
+        </div>
         <div class="mt-4 col-md-12"></div>
         <div class="text-center">
             <input class="btn btn-lg btn-primary btn-block" type="submit" value="Alterar">
         </div>
         <input type="hidden" th:field="*{news_id}">
-        <input type="hidden" th:field="*{newsThumbnail}">
         <input type="hidden" th:field="*{creationDate}">
         <input type="hidden" th:field="*{topics_news}">
         <input type="hidden" th:field="*{publisher}">
