@@ -50,13 +50,14 @@ public class subscriberController {
 
     @GetMapping({"/subscriber/", "/subscriber/{id}"})
     public String returnToSubscriberIndex(Model model,
-        @RequestParam(value="id",required = false, defaultValue= "0") Integer id) throws MalformedURLException {
+        @PathVariable(value="id",required = false) Integer id) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","home");
-        //ArrayList<News> newsList = publisherController.lastTenNews(newsService.listAllNews());
-        //Collections.reverse(newsList);
-        model.addAttribute("newsList",newsService.getNews(0,5));
+        id = id == null? 0: id;
+        model.addAttribute("idPage",id);
+        model.addAttribute("newsList",newsService.getNews(id,10));
+        model.addAttribute("hasNextPage",newsService.getNews(id+1,10).size());
         model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         return "subscriber/index";
     }

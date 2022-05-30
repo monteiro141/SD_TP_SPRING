@@ -6,7 +6,6 @@ import com.example.noticiasquentinhas.entities.TopicFormSearch;
 import com.example.noticiasquentinhas.entities.Topics;
 import com.example.noticiasquentinhas.service.NewsService;
 import com.example.noticiasquentinhas.service.TopicService;
-import com.example.noticiasquentinhas.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,13 +19,24 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 @Controller
-public class nonSubsciberController {
+public class nonSubscriberController {
 
     @Autowired
     private NewsService newsService;
 
     @Autowired
     private TopicService topicService;
+
+    @GetMapping("/{id}")
+    public String Index(Model model,@PathVariable(value="id",required = false) Integer id) throws MalformedURLException {
+        model.addAttribute("linkPath","home");
+        id = id == null? 0: id;
+        System.out.println("XAUUUUUUU");
+        model.addAttribute("idPage",id);
+        model.addAttribute("newsList",newsService.getNews(id,10));
+        model.addAttribute("hasNextPage",newsService.getNews(id+1,10).size());
+        return "index";
+    }
 
     @GetMapping({"/news/{id}", "/news"})
     public String returnToSubscriberNews(@PathVariable(value="id",required = false) Integer id,

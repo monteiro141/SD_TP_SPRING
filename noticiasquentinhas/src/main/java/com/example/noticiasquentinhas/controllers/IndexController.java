@@ -51,7 +51,8 @@ public class IndexController {
                 ArrayList<News> newsList = publisherController.lastTenNews(newsService.listAllNews());
                 Collections.reverse(newsList);
                 model.addAttribute("newsList",newsList);
-                return "index";
+                //return "index";
+                return "redirect:/0";
         }
     }
 }

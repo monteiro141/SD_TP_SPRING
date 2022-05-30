@@ -48,16 +48,17 @@ public class publisherController {
         this.topicService = topicService;
     }
 
-    @GetMapping(path = "/publisher/")
-    public String returnToPublisherIndex(Model model) throws MalformedURLException {
+    @GetMapping({"/publisher/", "/publisher/{id}"})
+    public String returnToPublisherIndex(Model model,@PathVariable(value="id",required = false) Integer id) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","home");
+        id = id == null? 0: id;
+        model.addAttribute("idPage",id);
+        model.addAttribute("newsList",newsService.getNews(id,10));
+        model.addAttribute("hasNextPage",newsService.getNews(id+1,10).size());
         model.addAttribute("pathImage",userService.search(authentication.getName()).getProfilePicPath());
         model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
-        ArrayList<News> newsList = lastTenNews(newsService.listAllNews());
-        Collections.reverse(newsList);
-        model.addAttribute("newsList",newsList);
         return "publisher/index";
     }
 
