@@ -143,7 +143,6 @@ public class subscriberController {
         model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
 
         if(id!=null){
-            System.out.println(id);
             News lastNews= newsService.getLastNewsFromTopic(id);
             if(lastNews != null) {
                 model.addAttribute("lastNew", lastNews);
@@ -207,11 +206,8 @@ public class subscriberController {
         fetchedUser.setFirstName(userRegistrationDto.getFirstName());
         fetchedUser.setLastName(userRegistrationDto.getLastName());
         User savedUser;
-        System.out.println(multipartFile.getOriginalFilename());
-        System.out.println(fileImagePath);
         if(multipartFile.getOriginalFilename() != null && !multipartFile.getOriginalFilename().equals("")){
             String fileName= StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
-            System.out.println(fileName);
             fetchedUser.setProfilePic(fileName);
             String uploadDir= "profile-pics/"+ fetchedUser.getId();
             Path uploadPath = Paths.get(uploadDir);
@@ -230,12 +226,10 @@ public class subscriberController {
             }
         }
         if(userRegistrationDto.getPassword() != null && !userRegistrationDto.getPassword().equals("")){
-            savedUser = userService.save(fetchedUser,userRegistrationDto.getPassword());
+            userService.save(fetchedUser,userRegistrationDto.getPassword());
         }else{
-            savedUser = userService.save(fetchedUser);
+            userService.save(fetchedUser);
         }
-
-        System.out.println(savedUser.getFirstName());
 
 
         return "redirect:/";

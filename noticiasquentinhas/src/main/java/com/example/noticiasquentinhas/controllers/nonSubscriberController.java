@@ -31,7 +31,6 @@ public class nonSubscriberController {
     public String Index(Model model,@PathVariable(value="id",required = false) Integer id) throws MalformedURLException {
         model.addAttribute("linkPath","home");
         id = id == null? 0: id;
-        System.out.println("XAUUUUUUU");
         model.addAttribute("idPage",id);
         model.addAttribute("newsList",newsService.getNews(id,10));
         model.addAttribute("hasNextPage",newsService.getNews(id+1,10).size());
@@ -89,7 +88,6 @@ public class nonSubscriberController {
         model.addAttribute("topicForm", new TopicForm());
 
         if(id!=null){
-            System.out.println(id);
             News lastNews= newsService.getLastNewsFromTopic(id);
             if(lastNews != null) {
                 model.addAttribute("lastNew", lastNews);

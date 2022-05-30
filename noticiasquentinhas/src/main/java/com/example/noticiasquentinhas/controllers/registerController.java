@@ -36,8 +36,6 @@ public class registerController {
     public String registerOnRepository(UserRegistrationDto userRegistrationDto){
         User user = new User(userRegistrationDto.getFirstName(),userRegistrationDto.getLastName(),userRegistrationDto.getEmail(),passwordEncoder.encode(userRegistrationDto.getPassword()),
                 true, userRegistrationDto.getRole());
-        System.out.println("User:");
-        System.out.println(user);
         try{
             userService.save(userRegistrationDto);
         } catch (Exception e){

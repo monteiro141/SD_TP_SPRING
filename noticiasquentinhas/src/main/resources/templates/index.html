@@ -48,11 +48,14 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a th:href="@{/news}" class="nav-link px-2 text-white">Consult news from a timestamp</a>
-                    </li>
-                    <li class="nav-item">
-                        <a th:href="@{/lastNews}" class="nav-link px-2 text-white">Consult last news from a topic</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="#" id="navbarDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Consultar Notícias
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown1">
+                            <li><a class="dropdown-item" th:href="@{/news}">Através de um timestamp</a></li>
+                            <li><a class="dropdown-item" th:href="@{/lastNews}" >Última notícia de um tópico</a></li>
+                        </ul>
                     </li>
                 </ul>
                 <div class="d-flex">

@@ -169,8 +169,8 @@ public class publisherController {
                     "</html>");
             emailDetails.setRecipient("shekwodjek@gmail.com");
             emailDetails.setAttachment(newsSaved.getProfilePicPath());
-            String status = emailService.sendMailWithAttachment(emailDetails);
-            System.out.println("status: " + status);
+            //String status = emailService.sendMailWithAttachment(emailDetails);
+            //System.out.println("status: " + status);
 
         } catch (Exception e){
             return "redirect:/publisher/createNews?create=fail";
