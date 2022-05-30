@@ -3,6 +3,7 @@ package com.example.noticiasquentinhas.service;
 import com.example.noticiasquentinhas.entities.*;
 import com.example.noticiasquentinhas.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
