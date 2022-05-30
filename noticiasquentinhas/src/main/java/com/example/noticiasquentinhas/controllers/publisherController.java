@@ -4,9 +4,11 @@ package com.example.noticiasquentinhas.controllers;
 
 import com.example.noticiasquentinhas.entities.*;
 import com.example.noticiasquentinhas.repository.NewsRepository;
+import com.example.noticiasquentinhas.service.EmailService;
 import com.example.noticiasquentinhas.service.NewsService;
 import com.example.noticiasquentinhas.service.TopicService;
 import com.example.noticiasquentinhas.service.UserService;
+import com.example.noticiasquentinhas.smtp.EmailDetails;
 import org.mockito.internal.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -29,6 +31,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 
+//import static jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle.details;
+
 @Controller
 public class publisherController {
 
@@ -41,11 +45,14 @@ public class publisherController {
     @Autowired
     private TopicService topicService;
 
+    @Autowired private EmailService emailService;
 
-    public publisherController(UserService userService, NewsService newsService, TopicService topicService) {
+
+    public publisherController(UserService userService, NewsService newsService, TopicService topicService, EmailService emailService) {
         this.userService = userService;
         this.newsService = newsService;
         this.topicService = topicService;
+        this.emailService = emailService;
     }
 
     @GetMapping({"/publisher/", "/publisher/{id}"})
@@ -130,7 +137,6 @@ public class publisherController {
                     topicService.search(newsForm.getTopic()));
             if(multipartFile.getOriginalFilename() != null && !multipartFile.getOriginalFilename().equals("")) {
                 String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
-                System.out.println(fileName);
                 newsSaved.setNewsThumbnail(fileName);
                 String uploadDir = "news-thumbnail/" + newsSaved.getNews_id();
                 Path uploadPath = Paths.get(uploadDir);
@@ -149,6 +155,22 @@ public class publisherController {
                 }
             }
             newsService.saveEditNew(newsSaved);
+            EmailDetails emailDetails = new EmailDetails();
+            emailDetails.setSubject("Nova noticia no topico - " + newsForm.getTopic());
+
+            emailDetails.setMsgBody("<html> " +
+                    "<body>" +
+                    "<img src='cid:image'/>" +
+                    "<p>Venha ja visitar o nosso site!</p>" +
+                    "<p>A notícia aguarda por si, mais quentinha era impossível...</p><br>" +
+                    "<p>Atenciosamente,</p>" +
+                    "<p>Noticias Quentinhas.</p>" +
+                    "</body>" +
+                    "</html>");
+            emailDetails.setRecipient("shekwodjek@gmail.com");
+            emailDetails.setAttachment(newsSaved.getProfilePicPath());
+            String status = emailService.sendMailWithAttachment(emailDetails);
+            System.out.println("status: " + status);
 
         } catch (Exception e){
             return "redirect:/publisher/createNews?create=fail";
