@@ -12,6 +12,7 @@ import com.example.noticiasquentinhas.smtp.EmailDetails;
 import org.mockito.internal.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,12 +25,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 //import static jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle.details;
 
@@ -155,23 +160,7 @@ public class publisherController {
                 }
             }
             newsService.saveEditNew(newsSaved);
-            EmailDetails emailDetails = new EmailDetails();
-            emailDetails.setSubject("Nova noticia no topico - " + newsForm.getTopic());
-
-            emailDetails.setMsgBody("<html> " +
-                    "<body>" +
-                    "<img src='cid:image'/>" +
-                    "<p>Venha ja visitar o nosso site!</p>" +
-                    "<p>A notícia aguarda por si, mais quentinha era impossível...</p><br>" +
-                    "<p>Atenciosamente,</p>" +
-                    "<p>Noticias Quentinhas.</p>" +
-                    "</body>" +
-                    "</html>");
-            emailDetails.setRecipient("shekwodjek@gmail.com");
-            emailDetails.setAttachment(newsSaved.getProfilePicPath());
-            //String status = emailService.sendMailWithAttachment(emailDetails);
-            //System.out.println("status: " + status);
-
+            sendEmail(newsSaved.getTopics_news());
         } catch (Exception e){
             return "redirect:/publisher/createNews?create=fail";
         }
@@ -287,6 +276,35 @@ public class publisherController {
 
 
         return "redirect:/";
+    }
+
+    public void sendEmail(Topics topic){
+        EmailDetails emailDetails = new EmailDetails();
+        emailDetails.setSubject("Nova noticia no topico - " + topic.getName());
+
+        emailDetails.setMsgBody("<html> " +
+                "<body>" +
+                "<img src='cid:image'/>" +
+                "<p>Venha ja visitar o nosso site!</p>" +
+                "<p>A notícia aguarda por si, mais quentinha era impossível...</p><br>" +
+                "<p>Atenciosamente,</p>" +
+                "<p>Noticias Quentinhas.</p>" +
+                "</body>" +
+                "</html>");
+
+
+        ArrayList<String> usersToSendEmail = userService.getUsersWithSubscribedTopic(topic.getTopic_id());
+
+        final Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(()->{
+            for (String email: usersToSendEmail) {
+                emailDetails.setRecipient(email);
+                String status = emailService.sendMailWithAttachment(emailDetails);
+                System.out.println("LOG [SEND-EMAIL] "+status);
+            }
+                }
+        );
+
     }
 
 }

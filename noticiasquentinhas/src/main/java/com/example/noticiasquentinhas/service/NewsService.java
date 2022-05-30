@@ -22,7 +22,7 @@ public interface NewsService {
     public ArrayList<News> listAllNews();
     public News findNew(Integer id);
     public News saveEditNew(News news);
-    public ArrayList<News>getNewsFromTimestamp(Topics topic, LocalDateTime date1, LocalDateTime date2);
+    public List<News>getNewsFromTimestamp(Topics topic, LocalDateTime date1, LocalDateTime date2, Integer pageNumber, Integer pageSize);
     public News getLastNewsFromTopic(Integer topicID);
     public List<News> getNews(Integer pageNumber, Integer pageSize);
     public List<News> getPublisherNews(String email,Integer pageNumber, Integer pageSize);

@@ -4,6 +4,8 @@ import com.example.noticiasquentinhas.entities.User;
 import com.example.noticiasquentinhas.entities.UserRegistrationDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.util.ArrayList;
+
 public interface  UserService extends UserDetailsService {
     User save(UserRegistrationDto registrationDto);
     User save(User user);
@@ -11,4 +13,5 @@ public interface  UserService extends UserDetailsService {
     public String currentUserName(String email);
     public String currentUserRole(String email);
     public User search(String email);
+    public ArrayList<String> getUsersWithSubscribedTopic(Integer topicID);
 }

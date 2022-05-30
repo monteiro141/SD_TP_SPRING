@@ -66,9 +66,10 @@ public class NewsServiceImpl implements NewsService{
     }
 
     @Override
-    public ArrayList<News>getNewsFromTimestamp(Topics topic, LocalDateTime date1, LocalDateTime date2){
-        ArrayList<News> newsFromTimeStamp= new ArrayList<>();
-        ArrayList<News> newsFromTopic= newsRepository.findAllByTopics_news(topic.getName());
+    public List<News>getNewsFromTimestamp(Topics topic, LocalDateTime date1, LocalDateTime date2, Integer pageNumber, Integer pageSize){
+        List<News> newsFromTimeStamp= new ArrayList<>();
+        Pageable page = PageRequest.of(pageNumber,pageSize);
+        List<News> newsFromTopic = newsRepository.findAllByTopics_news(topic.getName(), page);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         for (News news : newsFromTopic){
             if(date1.isBefore(LocalDateTime.parse(news.getCreationDate(),formatter)) && date2.isAfter(LocalDateTime.parse(news.getCreationDate(),formatter))){

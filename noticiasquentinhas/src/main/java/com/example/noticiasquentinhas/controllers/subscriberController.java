@@ -26,10 +26,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
+import java.util.*;
+
 @Controller
 public class subscriberController {
 
@@ -87,7 +85,7 @@ public class subscriberController {
         return "redirect:/";
     }
 
-    @GetMapping({"/subscriber/news/{id}", "/subscriber/news", "/subscriber/news/{page}"})
+    @GetMapping({"/subscriber/news/{id}", "/subscriber/news", "/subscriber/news/{id}/{page}"})
     public String returnToSubscriberNews(@PathVariable(value="id",required = false) Integer id,
             @PathVariable(value="page",required = false) Integer page,
             @RequestParam(name="date1", required = false, defaultValue = "none") String date1,
@@ -106,7 +104,13 @@ public class subscriberController {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime datetime1 = LocalDateTime.parse(date1,formatter);
             LocalDateTime datetime2 = LocalDateTime.parse(date2,formatter);
-            ArrayList<News> newsFromTimeStamp = newsService.getNewsFromTimestamp(topicService.getTopicByID(id),datetime1,datetime2);
+
+            page = page == null? 0 : page;
+            List<News> newsFromTimeStamp = newsService.getNewsFromTimestamp(topicService.getTopicByID(id),datetime1,datetime2,page,10);
+
+            model.addAttribute("idPage",page);
+            model.addAttribute("hasNextPage",newsService.getNewsFromTimestamp(topicService.getTopicByID(id),datetime1,datetime2,page+1,10).size());
+            model.addAttribute("partLink", "date1="+date1+"&date2="+date2+"&valid=true");
             model.addAttribute("newsFromTimeStamp",newsFromTimeStamp);
             model.addAttribute("newsFromTimeStampSize",newsFromTimeStamp.size());
         }
@@ -124,6 +128,7 @@ public class subscriberController {
             LocalDateTime datetime2 = LocalDateTime.parse(topicFormsearch.getDate2(),formatter);
             String stringDate1 = topicFormsearch.getDate1();
             String stringDate2 = topicFormsearch.getDate2();
+            System.out.println(stringDate1);
             if(datetime1.isBefore(datetime2))
                 return "redirect:/subscriber/news/"+ topicService.search(topicFormsearch.getName()).getTopic_id()+"?date1="+stringDate1+"&date2="+stringDate2+"&valid=true";
         }catch (Exception e){

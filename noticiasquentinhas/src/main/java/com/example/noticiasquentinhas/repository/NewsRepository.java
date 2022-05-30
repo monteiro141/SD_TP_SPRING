@@ -17,8 +17,8 @@ public interface NewsRepository extends CrudRepository<News, Integer> {
     ArrayList<News> findAll();
     @Query("select n from News n ORDER BY n.news_id desc")
     List<News> findAll(Pageable P);
-    @Query("select n from News n where n.topics_news.name = ?1")
-    ArrayList<News> findAllByTopics_news(String topicName);
+    @Query("select n from News n where n.topics_news.name = ?1 ORDER BY n.news_id desc")
+    List<News> findAllByTopics_news(String topicName, Pageable P);
     @Query("select n from News n where n.publisher.email = ?1 ORDER BY n.news_id desc")
     List<News> findAllByPublisher_Email(String email, Pageable P);
     @Query("select n from News n where n.topics_news.topic_id = ?1")

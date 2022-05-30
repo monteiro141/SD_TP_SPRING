@@ -61,6 +61,13 @@
                     </div>
                 </div>
             </div>
+            <div class="mt-4 col-md-12"></div>
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <a class="btn btn-md btn-primary btn-block" th:if="${idPage} != 0" th:href="@{/news/{id}/{page}?{rest}(id=${id},page=${idPage}-1,rest=${partLink})}">Página Anterior</a>
+                    <a class="btn btn-md btn-primary btn-block" th:if="${hasNextPage} != 0" th:href="@{/news/{id}/{page}?{rest}(id=${id},page=${idPage}+1,rest=${partLink})}">Próxima Página</a>
+                </div>
+            </div>
             <div th:if="${newsFromTimeStampSize} == 0" class="alert alert-danger center-div text-center">
                 Não há noticias nesse intervalo!
             </div>

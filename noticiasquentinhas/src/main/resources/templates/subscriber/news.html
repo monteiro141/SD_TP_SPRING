@@ -21,12 +21,12 @@
                     <option th:each="topicss : ${topicsList}" th:text="${topicss.name}"  th:value="${topicss.name}"></option>
                 </select>
                 <div class="mt-2 col-md-12"></div>
-                <label for="firstDate">Starting Date and Time: </label>
+                <label for="firstDate">Primeira Data e Hora: </label>
                 <input id="firstDate" type="datetime-local" step="1" autocomplete="off"  required th:field="*{date1}"/>
 
                 <div class="mt-2 col-md-12"></div>
 
-                <label for="secondDate">Ending Date and Time: </label>
+                <label for="secondDate">Segunda Data e Hora: </label>
                 <input id="secondDate" type="datetime-local" step="1" autocomplete="off" required th:field="*{date2}"/>
                 <div class="mt-2 col-md-12"></div>
                 <button class="btn btn-lg btn-primary btn-block" type="submit" >Pesquisar</button>
@@ -59,6 +59,13 @@
                     </div>
                 </div>
             </div>
+            <div class="mt-4 col-md-12"></div>
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <a class="btn btn-md btn-primary btn-block" th:if="${idPage} != 0" th:href="@{/subscriber/news/{id}/{page}?{rest}(id=${id},page=${idPage}-1,rest=${partLink})}">Página Anterior</a>
+                    <a class="btn btn-md btn-primary btn-block" th:if="${hasNextPage} != 0" th:href="@{/subscriber/news/{id}/{page}?{rest}(id=${id},page=${idPage}+1,rest=${partLink})}">Próxima Página</a>
+                </div>
+            </div>
             <div th:if="${newsFromTimeStampSize} == 0" class="alert alert-danger center-div text-center">
                 Não há noticias nesse intervalo!
             </div>
@@ -70,6 +77,8 @@
         </span>
         <span th:case="*">
         </span>
+
+
     </td>
 
 </div>

@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class nonSubscriberController {
@@ -37,8 +38,9 @@ public class nonSubscriberController {
         return "index";
     }
 
-    @GetMapping({"/news/{id}", "/news"})
+    @GetMapping({"/news/{id}", "/news","/news/{id}/{page}"})
     public String returnToSubscriberNews(@PathVariable(value="id",required = false) Integer id,
+                                         @PathVariable(value="page",required = false) Integer page,
                                          @RequestParam(name="date1", required = false, defaultValue = "none") String date1,
                                          @RequestParam(name="date2", required = false, defaultValue = "none") String date2,
                                          @RequestParam(name="valid", required = false, defaultValue = "none") String validation,
@@ -52,7 +54,13 @@ public class nonSubscriberController {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime datetime1 = LocalDateTime.parse(date1,formatter);
             LocalDateTime datetime2 = LocalDateTime.parse(date2,formatter);
-            ArrayList<News> newsFromTimeStamp = newsService.getNewsFromTimestamp(topicService.getTopicByID(id),datetime1,datetime2);
+
+            page = page == null? 0 : page;
+            List<News> newsFromTimeStamp = newsService.getNewsFromTimestamp(topicService.getTopicByID(id),datetime1,datetime2,page,10);
+
+            model.addAttribute("idPage",page);
+            model.addAttribute("hasNextPage",newsService.getNewsFromTimestamp(topicService.getTopicByID(id),datetime1,datetime2,page+1,10).size());
+            model.addAttribute("partLink", "date1="+date1+"&date2="+date2+"&valid=true");
             model.addAttribute("newsFromTimeStamp",newsFromTimeStamp);
             model.addAttribute("newsFromTimeStampSize",newsFromTimeStamp.size());
         }

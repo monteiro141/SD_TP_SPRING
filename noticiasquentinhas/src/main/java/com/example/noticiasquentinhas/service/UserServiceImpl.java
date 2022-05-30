@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -84,6 +85,11 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException("Invalid username or password.");
         }
         return user.getRole();
+    }
+
+    @Override
+    public ArrayList<String> getUsersWithSubscribedTopic(Integer topicID){
+        return userRepository.findAllByTopics_subscriber(topicID);
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(String role){
