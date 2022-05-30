@@ -7,12 +7,17 @@ import com.example.noticiasquentinhas.entities.User;
 import com.example.noticiasquentinhas.repository.NewsRepository;
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -55,8 +60,6 @@ public class NewsServiceImpl implements NewsService{
         return newsRepository.findById(id).get();
     }
 
-
-
     @Override
     public News saveEditNew(News news){
         return newsRepository.save(news);
@@ -81,5 +84,12 @@ public class NewsServiceImpl implements NewsService{
         if(newsFromTopic.size()!=0)
             return newsFromTopic.get(newsFromTopic.size()-1);
         return null;
+    }
+
+    @Override
+    public List<News> getNews(Integer pageNumber, Integer pageSize){
+        //Sort sort = Sort.by("news_id").descending();
+        Pageable page = PageRequest.of(pageNumber,pageSize);
+        return newsRepository.findAll(page);
     }
 }

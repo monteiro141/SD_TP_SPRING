@@ -42,17 +42,17 @@
 <header class="p-2 bg-dark text-white">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Home</a>
+            <a class="navbar-brand" th:href="@{/}">Home</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a href="" class="nav-link px-2 text-white">Consult news from a topic in a timestamp</a>
+                        <a th:href="@{/news}" class="nav-link px-2 text-white">Consult news from a timestamp</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link px-2 text-white">Consult last news from a topic</a>
+                        <a th:href="@{/lastNews}" class="nav-link px-2 text-white">Consult last news from a topic</a>
                     </li>
                 </ul>
                 <div class="d-flex">
@@ -68,34 +68,11 @@
 <div class="mt-2 col-md-12"></div>
 
 <main class="container">
-    <div class="p-4 p-md-4 mb-4 text-white rounded bg-dark">
-        <div class="col-md-14 px-63">
-            <h1 class="display-2 fst-italic">Notícias Quentinhas</h1>
-            <!-- <p class="lead my-3">Multiple lines of text that form the lede, informing new readers quickly and efficiently about what’s most interesting in this post’s contents.</p> -->
-            <!-- <p class="lead mb-0"><a href="#" class="text-white fw-bold">Continue reading...</a></p> -->
-        </div>
-    </div>
-
-    <div class="row mb-2 text-break">
-        <div class="col-md-6" th:each="newIteration : ${newsList}">
-            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative" >
-                <div class="col p-4 d-flex flex-column position-static">
-                    <strong class="d-inline-block mb-2 text-success"  th:text="${newIteration.topics_news.name}"></strong>
-                    <h3 class="mb-0 text-break" th:text="${newIteration.title}"></h3>
-                    <div class="mb-1 text-muted text-break"th:text="${newIteration.creationDate}" ></div>
-                    <div class="mb-1 text-muted text-break" th:text="${newIteration.publisher.firstName}+' '+${newIteration.publisher.lastName}"></div>
-                    <p class="mb-auto" th:text="${newIteration.content}"></p>
-
-                </div>
-                <div class="col-auto d-none d-lg-block">
-                    <img th:src="@{${newIteration.newsThumbnailPath}}" class="bd-placeholder-img" width="200" height="250" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em"></text></img>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-
+    <td th:switch="${linkPath}">
+        <span th:case="'news'"><div th:replace="nonSubscriber/news :: news_frag"></div></span>
+        <span th:case="'lastNews'"><div th:replace="nonSubscriber/lastNews :: lastNews_frag"></div></span>
+        <span th:case="*"><div th:replace="nonSubscriber/newsList :: newsList_frag"></div></span>
+    </td>
 
 </main>
 <div class="mt-2 col-md-12"></div>

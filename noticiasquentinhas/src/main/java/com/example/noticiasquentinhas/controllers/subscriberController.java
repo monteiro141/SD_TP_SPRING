@@ -48,21 +48,18 @@ public class subscriberController {
         this.topicService=topicService;
     }
 
-
-
-    @GetMapping(path = "/subscriber/")
-    public String returnToSubscriberIndex(Model model) throws MalformedURLException {
+    @GetMapping({"/subscriber/", "/subscriber/{id}"})
+    public String returnToSubscriberIndex(Model model,
+        @RequestParam(value="id",required = false, defaultValue= "0") Integer id) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","home");
-        ArrayList<News> newsList = publisherController.lastTenNews(newsService.listAllNews());
-        Collections.reverse(newsList);
-        model.addAttribute("newsList",newsList);
+        //ArrayList<News> newsList = publisherController.lastTenNews(newsService.listAllNews());
+        //Collections.reverse(newsList);
+        model.addAttribute("newsList",newsService.getNews(0,5));
         model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
         return "subscriber/index";
     }
-
-
 
     @GetMapping("/subscriber/topic")
     public String returnToSubscriberTopic(Model model) throws MalformedURLException {
@@ -70,6 +67,7 @@ public class subscriberController {
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","topic");
         ArrayList<Topics> topicsList = topicService.getUnsubscribedTopics(userService.search(authentication.getName()));
+
         model.addAttribute("topicslist", topicsList);
         model.addAttribute("checkedTopics", new TopicFormSubscriber());
         model.addAttribute("topicsSize", topicsList.size());
