@@ -87,8 +87,9 @@ public class subscriberController {
         return "redirect:/";
     }
 
-    @GetMapping({"/subscriber/news/{id}", "/subscriber/news"})
+    @GetMapping({"/subscriber/news/{id}", "/subscriber/news", "/subscriber/news/{page}"})
     public String returnToSubscriberNews(@PathVariable(value="id",required = false) Integer id,
+            @PathVariable(value="page",required = false) Integer page,
             @RequestParam(name="date1", required = false, defaultValue = "none") String date1,
             @RequestParam(name="date2", required = false, defaultValue = "none") String date2,
             @RequestParam(name="valid", required = false, defaultValue = "none") String validation,

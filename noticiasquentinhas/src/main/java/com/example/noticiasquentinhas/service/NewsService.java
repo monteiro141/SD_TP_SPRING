@@ -25,4 +25,5 @@ public interface NewsService {
     public ArrayList<News>getNewsFromTimestamp(Topics topic, LocalDateTime date1, LocalDateTime date2);
     public News getLastNewsFromTopic(Integer topicID);
     public List<News> getNews(Integer pageNumber, Integer pageSize);
+    public List<News> getPublisherNews(String email,Integer pageNumber, Integer pageSize);
 }

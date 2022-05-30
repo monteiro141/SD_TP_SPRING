@@ -88,8 +88,14 @@ public class NewsServiceImpl implements NewsService{
 
     @Override
     public List<News> getNews(Integer pageNumber, Integer pageSize){
-        //Sort sort = Sort.by("news_id").descending();
         Pageable page = PageRequest.of(pageNumber,pageSize);
         return newsRepository.findAll(page);
     }
+
+    @Override
+    public List<News> getPublisherNews(String email,Integer pageNumber, Integer pageSize){
+        Pageable page = PageRequest.of(pageNumber,pageSize);
+        return newsRepository.findAllByPublisher_Email(email,page);
+    }
+
 }

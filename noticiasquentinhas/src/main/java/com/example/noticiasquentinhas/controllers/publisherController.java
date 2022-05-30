@@ -178,15 +178,16 @@ public class publisherController {
         return "redirect:/publisher/createNews?create=success";
     }
 
-    @GetMapping(path = "/publisher/listNews")
-    public String returnToPublisherListNews(Model model) throws MalformedURLException {
+    @GetMapping({"/publisher/listNews", "/publisher/listNews/{id}"})
+    public String returnToPublisherListNews(Model model, @PathVariable(value="id",required = false) Integer id) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("loggedInUser",(userService.currentUserName(authentication.getName())));
         model.addAttribute("linkPath","listNews");
         model.addAttribute("profileSmallPic",userService.search(authentication.getName()).getProfilePicPath());
-        ArrayList<News> newsList = newsService.listNewsUser(authentication.getName());
-        Collections.reverse(newsList);
-        model.addAttribute("newsList",newsList);
+        id = id == null? 0: id;
+        model.addAttribute("idPage",id);
+        model.addAttribute("newsList",newsService.getPublisherNews(authentication.getName(),id,10));
+        model.addAttribute("hasNextPage",newsService.getPublisherNews(authentication.getName(),id+1,10).size());
         return "publisher/index";
     }
 
