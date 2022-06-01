@@ -285,10 +285,10 @@ public class publisherController {
         emailDetails.setMsgBody("<html> " +
                 "<body>" +
                 "<img src='cid:image'/>" +
-                "<p>Venha ja visitar o nosso site!</p>" +
+                "<p>Venha já visitar o nosso site!</p>" +
                 "<p>A notícia aguarda por si, mais quentinha era impossível...</p><br>" +
                 "<p>Atenciosamente,</p>" +
-                "<p>Noticias Quentinhas.</p>" +
+                "<p>Notícias Quentinhas.</p>" +
                 "</body>" +
                 "</html>");
 
