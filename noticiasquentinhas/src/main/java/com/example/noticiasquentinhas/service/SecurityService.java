@@ -19,6 +19,11 @@ public class SecurityService {
 
     private Logger logger = LoggerFactory.getLogger(SecurityService.class);
 
+    /**
+     * so the login after
+     * @param username the user email
+     * @param password the user password
+     */
     public void doLogin(String username, String password) {
 
         if (username == null) {

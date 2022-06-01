@@ -16,10 +16,12 @@
         </div>
         <div th:if="${topicsSize} != 0" >
             <form class="form-signin" th:action="@{/subscriber/news}" th:object="${topicToSearch}" method="POST">
-                <select class="form-select" aria-label="Default select example" required th:field="*{name}">
-                    <option value="" selected disabled>Tópico</option>
-                    <option th:each="topicss : ${topicsList}" th:text="${topicss.name}"  th:value="${topicss.name}"></option>
-                </select>
+                <div class="col-md-5">
+                    <select class="form-select" aria-label="Default select example" required th:field="*{name}">
+                        <option value="" selected disabled>Tópico</option>
+                        <option th:each="topicss : ${topicsList}" th:text="${topicss.name}"  th:value="${topicss.name}"></option>
+                    </select>
+                </div>
                 <div class="mt-2 col-md-12"></div>
                 <label for="firstDate">Primeira Data e Hora: </label>
                 <input id="firstDate" type="datetime-local" step="1" autocomplete="off"  required th:field="*{date1}"/>

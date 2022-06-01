@@ -5,7 +5,7 @@ import java.io.File;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import com.example.noticiasquentinhas.smtp.EmailDetails;
+import com.example.noticiasquentinhas.forms.EmailDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -22,15 +22,14 @@ public class EmailServiceImpl implements EmailService {
 
     @Value("${spring.mail.username}") private String sender;
 
-    // Method 1
-    // To send a simple email
-    public String sendSimpleMail(EmailDetails details)
-    {
+    /**
+     * Send a mail without attachment
+     * @param details the email details
+     * @return if the mail was sent successfully or not
+     */
+    public String sendSimpleMail(EmailDetails details) {
 
-        // Try block to check for exceptions
         try {
-
-            // Creating a simple mail message
             SimpleMailMessage mailMessage
                     = new SimpleMailMessage();
 
@@ -43,32 +42,28 @@ public class EmailServiceImpl implements EmailService {
             // Sending the mail
             javaMailSender.send(mailMessage);
             return "Mail Sent Successfully...";
-        }
-
-        // Catch block to handle the exceptions
-        catch (Exception e) {
+        } catch (Exception e) {
             return "Error while Sending Mail";
         }
     }
 
-    // Method 2
-    // To send an email with attachment
-    public String
-    sendMailWithAttachment(EmailDetails details)
-    {
-        // Creating a mime message
+
+    /**
+     * Send a mail with attachment
+     * @param details the email details
+     * @return if the mail was sent successfully or not
+     */
+    public String sendMailWithAttachment(EmailDetails details) {
+
         MimeMessage mimeMessage
                 = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper;
 
         try {
-
-
             String path = "/news-thumbnail/0/noticiasquentinhas.png";
             FileSystemResource file
                     = new FileSystemResource(
                     new File("."+path));
-
             mimeMessageHelper
                     = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setFrom(sender);
@@ -77,18 +72,10 @@ public class EmailServiceImpl implements EmailService {
             mimeMessageHelper.setSubject(
                     details.getSubject());
             mimeMessageHelper.addInline("image",file);
-
-            //mimeMessageHelper.addAttachment(file.getFilename(), file);
-
             // Sending the mail
             javaMailSender.send(mimeMessage);
             return "Mail sent Successfully";
-        }
-
-        // Catch block to handle MessagingException
-        catch (MessagingException e) {
-
-            // Display message when exception occurred
+        } catch (MessagingException e) {
             return "Error while sending mail!!!";
         }
     }

@@ -1,4 +1,4 @@
-package com.example.noticiasquentinhas.entities;
+package com.example.noticiasquentinhas.forms;
 
 public class TopicForm {
     private String name;

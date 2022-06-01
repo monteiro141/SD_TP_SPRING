@@ -1,4 +1,4 @@
-package com.example.noticiasquentinhas.entities;
+package com.example.noticiasquentinhas.forms;
 
 import org.mockito.internal.verification.Times;
 

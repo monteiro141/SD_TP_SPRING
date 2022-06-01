@@ -1,8 +1,8 @@
 package com.example.noticiasquentinhas.controllers;
 
 import com.example.noticiasquentinhas.entities.News;
-import com.example.noticiasquentinhas.entities.TopicForm;
-import com.example.noticiasquentinhas.entities.TopicFormSearch;
+import com.example.noticiasquentinhas.forms.TopicForm;
+import com.example.noticiasquentinhas.forms.TopicFormSearch;
 import com.example.noticiasquentinhas.entities.Topics;
 import com.example.noticiasquentinhas.service.NewsService;
 import com.example.noticiasquentinhas.service.TopicService;
@@ -28,6 +28,13 @@ public class nonSubscriberController {
     @Autowired
     private TopicService topicService;
 
+    /**
+     * Home page for the nonSubscriber and deals with pagination
+     * @param model
+     * @param id the number of the page
+     * @return
+     * @throws MalformedURLException
+     */
     @GetMapping("/{id}")
     public String Index(Model model,@PathVariable(value="id",required = false) Integer id) throws MalformedURLException {
         model.addAttribute("linkPath","home");
@@ -38,6 +45,17 @@ public class nonSubscriberController {
         return "index";
     }
 
+    /**
+     * Do the operation of: news from a topic with a specific timestamp
+     * @param id the topic id
+     * @param page the page id
+     * @param date1 the first date
+     * @param date2 the second date
+     * @param validation if dates are valid or not
+     * @param model
+     * @return the correct page
+     * @throws MalformedURLException
+     */
     @GetMapping({"/news/{id}", "/news","/news/{id}/{page}"})
     public String returnToSubscriberNews(@PathVariable(value="id",required = false) Integer id,
                                          @PathVariable(value="page",required = false) Integer page,
@@ -68,6 +86,12 @@ public class nonSubscriberController {
         return "index";
     }
 
+    /**
+     * Receive the data that the user entered in the form
+     * @param topicFormsearch the data that the user entered
+     * @return the user to the correct option
+     * @throws MalformedURLException
+     */
     @PostMapping("/news")
     public String getSubscribedTopicsForm(@ModelAttribute("checkedTopics") TopicFormSearch topicFormsearch) throws MalformedURLException {
         try{
@@ -78,14 +102,21 @@ public class nonSubscriberController {
             LocalDateTime datetime2 = LocalDateTime.parse(topicFormsearch.getDate2(),formatter);
             String stringDate1 = topicFormsearch.getDate1();
             String stringDate2 = topicFormsearch.getDate2();
-            if(datetime1.isBefore(datetime2))
+            if(datetime1.isBefore(datetime2) || !datetime1.equals(datetime2))
                 return "redirect:/news/"+ topicService.search(topicFormsearch.getName()).getTopic_id()+"?date1="+stringDate1+"&date2="+stringDate2+"&valid=true";
         }catch (Exception e){
-            return "redirect:/";
+            return "redirect:/news?valid=false";
         }
         return "redirect:/news?valid=false";
     }
 
+    /**
+     * Do the operation of: last news of a specific topic
+     * @param model
+     * @param id the topic id
+     * @return
+     * @throws MalformedURLException
+     */
     @GetMapping({"/lastNews/{id}", "/lastNews"})
     public String returnToSubscriberLastNews(Model model, @PathVariable(value="id",required = false) Integer id) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -108,6 +139,12 @@ public class nonSubscriberController {
         return "index";
     }
 
+    /**
+     * Receive the data that the user entered for the last news from a topic operation
+     * @param topicForm the topic that the user entered
+     * @return
+     * @throws MalformedURLException
+     */
     @PostMapping("/lastNews")
     public String returnToSubscriberLastNews(@ModelAttribute("checkedTopics") TopicForm topicForm) throws MalformedURLException {
         if(!topicForm.getName().equals(""))

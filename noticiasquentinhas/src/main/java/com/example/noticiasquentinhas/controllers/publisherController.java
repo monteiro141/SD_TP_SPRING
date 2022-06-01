@@ -3,20 +3,17 @@ package com.example.noticiasquentinhas.controllers;
 
 
 import com.example.noticiasquentinhas.entities.*;
-import com.example.noticiasquentinhas.repository.NewsRepository;
+import com.example.noticiasquentinhas.forms.NewsForm;
+import com.example.noticiasquentinhas.forms.TopicForm;
+import com.example.noticiasquentinhas.forms.UserRegistrationDto;
 import com.example.noticiasquentinhas.service.EmailService;
 import com.example.noticiasquentinhas.service.NewsService;
 import com.example.noticiasquentinhas.service.TopicService;
 import com.example.noticiasquentinhas.service.UserService;
-import com.example.noticiasquentinhas.smtp.EmailDetails;
-import org.mockito.internal.util.StringUtil;
+import com.example.noticiasquentinhas.forms.EmailDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -25,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,7 +30,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 //import static jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle.details;
 
@@ -60,6 +55,13 @@ public class publisherController {
         this.emailService = emailService;
     }
 
+    /**
+     * Home page for the publisher and deals with pagination
+     * @param model
+     * @param id the number of the page
+     * @return
+     * @throws MalformedURLException
+     */
     @GetMapping({"/publisher/", "/publisher/{id}"})
     public String returnToPublisherIndex(Model model,@PathVariable(value="id",required = false) Integer id) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -74,19 +76,14 @@ public class publisherController {
         return "publisher/index";
     }
 
-    public static ArrayList<News> lastTenNews(Iterable<News> currentList){
-        ArrayList<News> finalList = new ArrayList<>();
-        currentList.forEach((news -> {
-            if(finalList.size() < 10)
-                finalList.add(news);
-            else{
-                finalList.remove(0);
-                finalList.add(news);
-            }
-        }));
-        return finalList;
-    }
 
+    /**
+     * Page to do the add a topic operation
+     * @param name if the topic was added("success") or not ("fail")
+     * @param model
+     * @return
+     * @throws MalformedURLException
+     */
     @GetMapping(path = "/publisher/addTopic")
     public String returnToPublisherAddTopic(@RequestParam(name="create", required = false, defaultValue = "none") String name, Model model) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -98,6 +95,11 @@ public class publisherController {
         return "publisher/index";
     }
 
+    /**
+     * Receive topic that the user entered
+     * @param topicForm
+     * @return
+     */
     @PostMapping(path = "/publisher/addTopicButton")
     public String creatingANews(@ModelAttribute("addTopic") TopicForm topicForm){
         try{
@@ -108,6 +110,12 @@ public class publisherController {
         return "redirect:/publisher/addTopic?create=success";
     }
 
+    /**
+     * Show all topics to the publisher
+     * @param model
+     * @return
+     * @throws MalformedURLException
+     */
     @GetMapping(path = "/publisher/searchTopic")
     public String returnToPublishersearchTopic(Model model) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -119,6 +127,13 @@ public class publisherController {
         return "publisher/index";
     }
 
+    /**
+     * Create News page for the create news operation
+     * @param name
+     * @param model
+     * @return
+     * @throws MalformedURLException
+     */
     @GetMapping(path = "/publisher/createNews")
     public String returnToPublisherCreateNews(@RequestParam(name="create", required = false, defaultValue = "none") String name, Model model) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -132,6 +147,12 @@ public class publisherController {
         return "publisher/index";
     }
 
+    /**
+     * receive the news data that the user has entered
+     * @param multipartFile
+     * @param newsForm
+     * @return
+     */
     @PostMapping("/publisher/createNewsButton")
     public String creatingANews(@RequestParam(value = "fileImage") MultipartFile multipartFile,
                                 @ModelAttribute("newsForm") NewsForm newsForm){
@@ -167,6 +188,13 @@ public class publisherController {
         return "redirect:/publisher/createNews?create=success";
     }
 
+    /**
+     * List all news that the publisher done
+     * @param model
+     * @param id the number of the page
+     * @return
+     * @throws MalformedURLException
+     */
     @GetMapping({"/publisher/listNews", "/publisher/listNews/{id}"})
     public String returnToPublisherListNews(Model model, @PathVariable(value="id",required = false) Integer id) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -180,6 +208,14 @@ public class publisherController {
         return "publisher/index";
     }
 
+    /**
+     * Operation for the publisher to edit the news
+     * @param name
+     * @param id the number of the page
+     * @param model
+     * @return
+     * @throws MalformedURLException
+     */
     @GetMapping(path = "/publisher/editNews/{id}")
     public String returnToPublisherEditNews(@RequestParam(name="edit", required = false, defaultValue = "none") String name, @PathVariable(value="id") Integer id,Model model) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -194,6 +230,12 @@ public class publisherController {
         return "publisher/index";
     }
 
+    /**
+     * Receive the news edited and save the news
+     * @param news
+     * @param multipartFile
+     * @return
+     */
     @PostMapping("/publisher/editNewsButton")
     public String saveNew(@ModelAttribute("theNew") News news,
                           @RequestParam(value = "fileImage") MultipartFile multipartFile){
@@ -228,7 +270,12 @@ public class publisherController {
         return "redirect:/";
     }
 
-
+    /**
+     * Shows the publisher profile
+     * @param model
+     * @return
+     * @throws MalformedURLException
+     */
     @GetMapping(path = "/publisher/profile")
     public String returnToPublisherAddTopic(Model model) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -241,6 +288,13 @@ public class publisherController {
         return "publisher/index";
     }
 
+    /**
+     * update the user profile after the user click "Alterar"
+     * @param userRegistrationDto
+     * @param fileImagePath
+     * @param multipartFile
+     * @return
+     */
     @PostMapping("/publisher/saveProfile")
     public String saveNew(@ModelAttribute("userData") UserRegistrationDto userRegistrationDto,
                           @ModelAttribute("fileImagePath") String fileImagePath,
@@ -278,6 +332,10 @@ public class publisherController {
         return "redirect:/";
     }
 
+    /**
+     * Send email to the subscriber that is subscribed to a topic
+     * @param topic
+     */
     public void sendEmail(Topics topic){
         EmailDetails emailDetails = new EmailDetails();
         emailDetails.setSubject("Nova noticia no topico - " + topic.getName());

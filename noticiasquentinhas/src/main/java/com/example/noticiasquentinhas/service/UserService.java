@@ -1,7 +1,7 @@
 package com.example.noticiasquentinhas.service;
 
 import com.example.noticiasquentinhas.entities.User;
-import com.example.noticiasquentinhas.entities.UserRegistrationDto;
+import com.example.noticiasquentinhas.forms.UserRegistrationDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.ArrayList;

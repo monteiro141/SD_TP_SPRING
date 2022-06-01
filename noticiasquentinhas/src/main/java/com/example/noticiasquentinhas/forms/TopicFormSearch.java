@@ -1,4 +1,4 @@
-package com.example.noticiasquentinhas.entities;
+package com.example.noticiasquentinhas.forms;
 
 
 
@@ -8,7 +8,6 @@ import java.util.Date;
 
 public class TopicFormSearch {
     private String name;
-
 
     private String date1;
 

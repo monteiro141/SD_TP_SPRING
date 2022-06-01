@@ -1,18 +1,13 @@
 package com.example.noticiasquentinhas.controllers;
 
-import com.example.noticiasquentinhas.entities.News;
-import com.example.noticiasquentinhas.entities.TopicForm;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Collections;
 
 @Controller
 public class profileController {
@@ -21,11 +16,21 @@ public class profileController {
 
     }
 
+    /**
+     * Redirect to the profile page
+     * @param model
+     * @return
+     * @throws MalformedURLException
+     */
     @GetMapping(path = "/profile")
     public String returnToPublisherAddTopic(Model model) throws MalformedURLException {
         return getUserProfilePage();
     }
 
+    /**
+     * Check if the user is authenticated
+     * @return the user role or " " if the user doesn't has one
+     */
     private String isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || AnonymousAuthenticationToken.class.
@@ -36,6 +41,10 @@ public class profileController {
         return authentication.getAuthorities().toString();
     }
 
+    /**
+     * Check the role of the user and redirect to the correct profile page
+     * @return the place to redirect
+     */
     private String getUserProfilePage() {
         return switch (isAuthenticated().charAt(1)) {
             case 'P' -> "redirect:/publisher/profile";

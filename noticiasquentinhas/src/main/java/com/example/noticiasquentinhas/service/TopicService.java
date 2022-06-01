@@ -1,12 +1,11 @@
 package com.example.noticiasquentinhas.service;
 
-import com.example.noticiasquentinhas.entities.TopicForm;
-import com.example.noticiasquentinhas.entities.TopicFormSubscriber;
+import com.example.noticiasquentinhas.forms.TopicForm;
+import com.example.noticiasquentinhas.forms.TopicFormSubscriber;
 import com.example.noticiasquentinhas.entities.Topics;
 import com.example.noticiasquentinhas.entities.User;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 
 public interface TopicService {

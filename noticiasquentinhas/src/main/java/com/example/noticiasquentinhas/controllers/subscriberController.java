@@ -1,25 +1,25 @@
 package com.example.noticiasquentinhas.controllers;
 
 import com.example.noticiasquentinhas.entities.*;
+import com.example.noticiasquentinhas.forms.TopicForm;
+import com.example.noticiasquentinhas.forms.TopicFormSearch;
+import com.example.noticiasquentinhas.forms.TopicFormSubscriber;
+import com.example.noticiasquentinhas.forms.UserRegistrationDto;
 import com.example.noticiasquentinhas.service.NewsService;
 import com.example.noticiasquentinhas.service.TopicService;
 import com.example.noticiasquentinhas.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -46,6 +46,13 @@ public class subscriberController {
         this.topicService=topicService;
     }
 
+    /**
+     * Home page for the Subscriber and deals with pagination
+     * @param model
+     * @param id the number of the page
+     * @return
+     * @throws MalformedURLException
+     */
     @GetMapping({"/subscriber/", "/subscriber/{id}"})
     public String returnToSubscriberIndex(Model model,
         @PathVariable(value="id",required = false) Integer id) throws MalformedURLException {
@@ -60,6 +67,12 @@ public class subscriberController {
         return "subscriber/index";
     }
 
+    /**
+     * Do the operation: subscribe a topic
+     * @param model
+     * @return
+     * @throws MalformedURLException
+     */
     @GetMapping("/subscriber/topic")
     public String returnToSubscriberTopic(Model model) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -74,6 +87,12 @@ public class subscriberController {
         return "subscriber/index";
     }
 
+    /**
+     * Receive the topics that the user selected
+     * @param topicFormSubscriber
+     * @return
+     * @throws MalformedURLException
+     */
     @PostMapping("/subscriber/topic")
     public String getSubscribedTopicsForm(@ModelAttribute("checkedTopics") TopicFormSubscriber topicFormSubscriber) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -85,6 +104,17 @@ public class subscriberController {
         return "redirect:/";
     }
 
+    /**
+     * Do the operation of: news from a topic with a specific timestamp
+     * @param id the topic id
+     * @param page the page id
+     * @param date1 the first date
+     * @param date2 the second date
+     * @param validation if dates are valid or not
+     * @param model
+     * @return the correct page
+     * @throws MalformedURLException
+     */
     @GetMapping({"/subscriber/news/{id}", "/subscriber/news", "/subscriber/news/{id}/{page}"})
     public String returnToSubscriberNews(@PathVariable(value="id",required = false) Integer id,
             @PathVariable(value="page",required = false) Integer page,
@@ -118,6 +148,12 @@ public class subscriberController {
         return "subscriber/index";
     }
 
+    /**
+     * Receive the data that the user entered in the form
+     * @param topicFormsearch the data that the user entered
+     * @return the user to the correct option
+     * @throws MalformedURLException
+     */
     @PostMapping("/subscriber/news")
     public String getSubscribedTopicsForm(@ModelAttribute("checkedTopics") TopicFormSearch topicFormsearch) throws MalformedURLException {
         try{
@@ -129,14 +165,21 @@ public class subscriberController {
             String stringDate1 = topicFormsearch.getDate1();
             String stringDate2 = topicFormsearch.getDate2();
             System.out.println(stringDate1);
-            if(datetime1.isBefore(datetime2))
+            if(datetime1.isBefore(datetime2) || !datetime1.equals(datetime2))
                 return "redirect:/subscriber/news/"+ topicService.search(topicFormsearch.getName()).getTopic_id()+"?date1="+stringDate1+"&date2="+stringDate2+"&valid=true";
         }catch (Exception e){
-            return "redirect:/";
+            return "redirect:/subscriber/news?valid=false";
         }
         return "redirect:/subscriber/news?valid=false";
     }
 
+    /**
+     * Do the operation of: last news of a specific topic
+     * @param model
+     * @param id the topic id
+     * @return
+     * @throws MalformedURLException
+     */
     @GetMapping({"/subscriber/lastNews/{id}", "/subscriber/lastNews"})
     public String returnToSubscriberLastNews(Model model, @PathVariable(value="id",required = false) Integer id) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -161,6 +204,12 @@ public class subscriberController {
         return "subscriber/index";
     }
 
+    /**
+     * Receive the data that the user entered for the last news from a topic operation
+     * @param topicForm the topic that the user entered
+     * @return
+     * @throws MalformedURLException
+     */
     @PostMapping("/subscriber/lastNews")
     public String returnToSubscriberLastNews(@ModelAttribute("checkedTopics") TopicForm topicForm) throws MalformedURLException {
         if(!topicForm.getName().equals(""))
@@ -168,6 +217,12 @@ public class subscriberController {
         return "redirect:/";
     }
 
+    /**
+     * Do the operation of: remove a subscribed topic
+     * @param model
+     * @return
+     * @throws MalformedURLException
+     */
     @GetMapping("/subscriber/removeTopic")
     public String returnToSubscriberRemoveTopic(Model model) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -181,6 +236,12 @@ public class subscriberController {
         return "subscriber/index";
     }
 
+    /**
+     * Receive the topic that the user wants to unsubscribe
+     * @param topicForm
+     * @return
+     * @throws MalformedURLException
+     */
     @PostMapping("/subscriber/removeTopic")
     public String getSubscribedTopicsForm(@ModelAttribute("removeTopic") TopicForm topicForm) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -191,7 +252,12 @@ public class subscriberController {
         return "redirect:/";
     }
 
-
+    /**
+     * Shows the subscriber profile
+     * @param model
+     * @return
+     * @throws MalformedURLException
+     */
     @GetMapping(path = "/subscriber/profile")
     public String returnToPublisherAddTopic(Model model) throws MalformedURLException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -204,6 +270,13 @@ public class subscriberController {
         return "subscriber/index";
     }
 
+    /**
+     * update the user profile after the user click "Alterar"
+     * @param userRegistrationDto
+     * @param fileImagePath
+     * @param multipartFile
+     * @return
+     */
     @PostMapping("/subscriber/saveProfile")
     public String saveNew(@ModelAttribute("userData") UserRegistrationDto userRegistrationDto,
                           @ModelAttribute("fileImagePath") String fileImagePath,

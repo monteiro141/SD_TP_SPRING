@@ -1,7 +1,7 @@
 package com.example.noticiasquentinhas.service;
 
 
-import com.example.noticiasquentinhas.smtp.EmailDetails;
+import com.example.noticiasquentinhas.forms.EmailDetails;
 
 
 public interface EmailService {

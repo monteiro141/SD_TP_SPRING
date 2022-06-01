@@ -1,16 +1,13 @@
 package com.example.noticiasquentinhas.service;
 
 import com.example.noticiasquentinhas.entities.News;
-import com.example.noticiasquentinhas.entities.NewsForm;
+import com.example.noticiasquentinhas.forms.NewsForm;
 import com.example.noticiasquentinhas.entities.Topics;
 import com.example.noticiasquentinhas.entities.User;
 import com.example.noticiasquentinhas.repository.NewsRepository;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -18,7 +15,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -32,6 +28,13 @@ public class NewsServiceImpl implements NewsService{
         this.newsRepository = newsRepository;
     }
 
+    /**
+     * Save a news to the repository
+     * @param newsForm the news inserted by the publisher
+     * @param user the user that write the news
+     * @param topics the topic of the news
+     * @return the news
+     */
     @Override
     public News save(NewsForm newsForm, User user, Topics topics) {
         News news = new News(newsForm.getTitle(),newsForm.getContent(), newsForm.getCreationDate());
@@ -40,31 +43,35 @@ public class NewsServiceImpl implements NewsService{
         return newsRepository.save(news);
     }
 
-    @Override
-    public ArrayList<News> listNewsUser(String email) {
-        return newsRepository.findAllByPublisher_Email(email);
-    }
-
-    @Override
-    public Set<News> listNewsTopic(Timestamp timeStart, Timestamp timeEnd, String topic) {
-        return null;
-    }
-
-    @Override
-    public ArrayList<News> listAllNews(){
-        return newsRepository.findAll();
-    }
-
+    /**
+     * find a news with a specific id
+     * @param id the news id
+     * @return the news
+     */
     @Override
     public News findNew(Integer id){
         return newsRepository.findById(id).get();
     }
 
+    /**
+     * Save a specific news
+     * @param news the news
+     * @return the news
+     */
     @Override
     public News saveEditNew(News news){
         return newsRepository.save(news);
     }
 
+    /**
+     * Get all the news from a specific topic and a timestamp
+     * @param topic the topic
+     * @param date1 the first date
+     * @param date2 the second date
+     * @param pageNumber the page number
+     * @param pageSize the pagesize
+     * @return the news of a specic page (because of pagination)
+     */
     @Override
     public List<News>getNewsFromTimestamp(Topics topic, LocalDateTime date1, LocalDateTime date2, Integer pageNumber, Integer pageSize){
         List<News> newsFromTimeStamp= new ArrayList<>();
@@ -79,6 +86,11 @@ public class NewsServiceImpl implements NewsService{
         return newsFromTimeStamp;
     }
 
+    /**
+     * Get the last news from a specific topic
+     * @param topicID the topic id
+     * @return the news
+     */
     @Override
     public News getLastNewsFromTopic(Integer topicID){
         ArrayList<News> newsFromTopic= newsRepository.findAllByTopics_news(topicID);
@@ -87,12 +99,25 @@ public class NewsServiceImpl implements NewsService{
         return null;
     }
 
+    /**
+     * Get all the news
+     * @param pageNumber the page number
+     * @param pageSize the page size
+     * @return the news list
+     */
     @Override
     public List<News> getNews(Integer pageNumber, Integer pageSize){
         Pageable page = PageRequest.of(pageNumber,pageSize);
         return newsRepository.findAll(page);
     }
 
+    /**
+     * Get the news of a specific user
+     * @param email the user's email
+     * @param pageNumber the page number
+     * @param pageSize the page size
+     * @return the news list
+     */
     @Override
     public List<News> getPublisherNews(String email,Integer pageNumber, Integer pageSize){
         Pageable page = PageRequest.of(pageNumber,pageSize);

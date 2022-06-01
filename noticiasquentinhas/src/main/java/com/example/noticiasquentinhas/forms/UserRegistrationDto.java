@@ -1,4 +1,6 @@
-package com.example.noticiasquentinhas.entities;
+package com.example.noticiasquentinhas.forms;
+
+import com.example.noticiasquentinhas.entities.User;
 
 import javax.persistence.Transient;
 
