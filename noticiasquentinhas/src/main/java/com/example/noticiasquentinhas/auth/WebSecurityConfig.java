@@ -53,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers("/publisher/**").hasAuthority("PUBLISHER")
                         .antMatchers("/register", "/news/**").permitAll()
                         .antMatchers("/**").permitAll()
-                        .antMatchers("/**/favicon.ico").permitAll()
+                .antMatchers("/static/favicon.ico").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
