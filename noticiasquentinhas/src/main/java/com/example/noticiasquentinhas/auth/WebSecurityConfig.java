@@ -53,6 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers("/publisher/**").hasAuthority("PUBLISHER")
                         .antMatchers("/register", "/news/**").permitAll()
                         .antMatchers("/**").permitAll()
+                        .antMatchers("/**/favicon.ico").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
@@ -76,6 +77,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web
+                .ignoring()
+                .antMatchers("/resources/**");
     }
 
 

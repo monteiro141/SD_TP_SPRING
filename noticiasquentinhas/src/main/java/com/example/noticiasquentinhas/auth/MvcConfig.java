@@ -14,6 +14,7 @@ public class MvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         exposeDirectory("profile-pics", registry);
         exposeDirectory("news-thumbnail", registry);
+        registry.addResourceHandler("/resources/**");
     }
 
     private void exposeDirectory(String dirName, ResourceHandlerRegistry registry) {
